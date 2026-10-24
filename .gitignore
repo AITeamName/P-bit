@@ -1,0 +1,25 @@
+# OS / IDE
+.DS_Store
+.idea/
+*.iml
+.vscode/
+
+# env
+.env
+.env.*
+!.env.example
+
+# backend
+backend/.gradle/
+backend/build/
+backend/out/
+
+# ai
+ai/.venv/
+ai/__pycache__/
+*.pyc
+
+# frontend
+node_modules/
+dist/
+build/
