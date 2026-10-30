@@ -1,8 +1,14 @@
 # OS / IDE
 .DS_Store
+Thumbs.db
 .idea/
 *.iml
 .vscode/
+*.log
+
+# Claude Code (개인 설정)
+.claude/
+CLAUDE.local.md
 
 # env
 .env
@@ -15,11 +21,18 @@ backend/build/
 backend/out/
 
 # ai
-ai/.venv/
-ai/__pycache__/
+ai-server/.venv/
+__pycache__/
 *.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 
 # frontend
 node_modules/
 dist/
 build/
+
+# chrome extension 패키징 (서명 키 포함)
+*.pem
+*.crx

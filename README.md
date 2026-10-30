@@ -10,7 +10,7 @@ AI 프롬프트 작성 능력을 향상시키는 질문력 트레이너 서비�
 | 폴더 | 내용 | 담당 |
 |---|---|---|
 | `backend/` | Spring Boot API 서버 | BE |
-| `ai/` | FastAPI AI 서버 | AI |
+| `ai-server/` | FastAPI AI 서버 | AI |
 | `frontend/web/` | 웹사이트 (로그인 · 온보딩 · 대시보드) | FE |
 | `frontend/extension/` | 크롬 익스텐션 사이드바 | FE |
 | `docs/` | API 명세 · ERD 등 문서 | 전원 |
@@ -84,7 +84,7 @@ git push origin feat/KAN-12-signup-api
 | 파트 | add 명령 |
 |---|---|
 | BE | `git add backend/` |
-| AI | `git add ai/` |
+| AI | `git add ai-server/` |
 | FE 웹 | `git add frontend/web/` |
 | FE 익스텐션 | `git add frontend/extension/` |
 | 공통 문서 | `git add docs/` |
@@ -157,7 +157,7 @@ develop → main     ✅ (배포 시)
 | Scope | 대상 폴더 |
 |---|---|
 | `be` | `backend/` |
-| `ai` | `ai/` |
+| `ai` | `ai-server/` |
 | `web` | `frontend/web/` |
 | `ext` | `frontend/extension/` |
 | `infra` | `docker-compose.yml`, `.github/` |
@@ -202,12 +202,14 @@ git commit -m "chore(infra): 백엔드 CI 워크플로 추가 (KAN-29)"
 보안을 위해 모든 API Key 및 민감 정보는 `.env` 파일에서 관리합니다.
 
 - `.env` 파일은 절대 GitHub에 push하지 마세요 (`.gitignore`에 등록됨)
-- 필요한 키 목록은 각 폴더의 `.env.example`을 참고하세요
+- 루트 `.env.example`에는 `docker-compose.yml`이 쓰는 값만, 각 폴더의 `.env.example`에는 해당 서비스가 쓰는 값만 둡니다
+- 같은 키는 한 곳에만 작성합니다 (양쪽 값이 같아야 하는 키만 예외로 두고 주석으로 표시)
 - 실제 값은 팀 노션 페이지에서 확인 후 로컬에 복사하여 사용해주세요
 
 ```
+.env
 backend/.env
-ai/.env
+ai-server/.env
 frontend/web/.env
 frontend/extension/.env
 ```
