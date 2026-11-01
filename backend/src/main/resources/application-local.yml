@@ -1,0 +1,14 @@
+spring:
+  config:
+    # 작업 폴더가 backend/ 든 루트든 루트 .env를 읽는다
+    import: optional:file:../.env[.properties],optional:file:.env[.properties]
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/${DB_NAME}}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
