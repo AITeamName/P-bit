@@ -203,6 +203,7 @@ git commit -m "chore(infra): 백엔드 CI 워크플로 추가 (KAN-29)"
 
 - `.env` 파일은 절대 GitHub에 push하지 마세요 (`.gitignore`에 등록됨)
 - 루트 `.env.example`에는 `docker-compose.yml`이 쓰는 값만, 각 폴더의 `.env.example`에는 해당 서비스가 쓰는 값만 둡니다
+- 로컬 DB 접속 정보는 루트 `.env` 하나로 관리합니다. Docker와 백엔드(`local` 프로필)가 같은 파일을 읽습니다
 - 같은 키는 한 곳에만 작성합니다 (양쪽 값이 같아야 하는 키만 예외로 두고 주석으로 표시)
 - 실제 값은 팀 노션 페이지에서 확인 후 로컬에 복사하여 사용해주세요
 
@@ -218,13 +219,36 @@ frontend/extension/.env
 
 ## 🐳 로컬 실행
 
+Docker Desktop과 Java 17이 필요합니다. 백엔드는 IntelliJ에서 실행하고 DB만 Docker로 띄웁니다.
+
 ```bash
-# DB 실행
+# 최초 1회: .env 생성 후 값 입력 (값은 팀 노션 참고)
+cp .env.example .env
+
+# DB 실행 (최초 1회는 이미지 다운로드)
 docker compose up -d
 
-# 백엔드
+# 백엔드 — IntelliJ에서 ApiApplication 실행, 또는
 cd backend
 ./gradlew bootRun
 ```
+
+기본 프로필은 `local`입니다. 앱을 실행하면 Flyway가 스키마를 자동으로 생성합니다.
+
+| 항목 | 값 |
+|---|---|
+| DB | `localhost:5432` / DB 이름·계정·비밀번호는 루트 `.env` |
+| API 문서 | http://localhost:8080/swagger-ui.html |
+| 헬스체크 | http://localhost:8080/actuator/health |
+
+```bash
+# 테이블 확인 (서비스 테이블 10개 + flyway_schema_history)
+docker exec -it pbit-postgres sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\dt"'
+
+# DB 초기화 (로컬 데이터 전부 삭제)
+docker compose down -v
+```
+
+> 스키마는 Flyway로만 변경합니다 (`backend/src/main/resources/db/migration`). 이미 적용된 `V*.sql`은 수정하지 말고 새 버전 파일을 추가하세요.
 
 AI · 프론트 실행 방법은 각 폴더의 README를 참고하세요.
