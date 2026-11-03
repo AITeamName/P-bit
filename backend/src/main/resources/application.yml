@@ -12,6 +12,11 @@ spring:
         jdbc:
           time_zone: UTC
 
+app:
+  cors:
+    # 쉼표로 여러 개 지정
+    allowed-origins: ${WEB_ORIGIN}
+
 springdoc:
   api-docs:
     enabled: false
