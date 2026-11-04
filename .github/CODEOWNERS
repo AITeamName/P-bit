@@ -1,0 +1,12 @@
+# LLM ↔ 백엔드 계약 — 양쪽 승인 필수
+/ai-server/prompts/                 @r1nn-dev @presentk0
+/docs/dev/specs/interfaces.md       @r1nn-dev @presentk0
+/docs/dev/specs/architecture.md     @r1nn-dev @presentk0 @seonkim1022
+
+# 파트별 소유
+/ai-server/                         @r1nn-dev
+/backend/                           @presentk0
+/frontend/                          @qkdnf-pixel
+/docs/brand/                        @hyijin122-a11y
+/docs/ops/                          @seonkim1022
+/docs/dev/ai/                       @r1nn-dev
