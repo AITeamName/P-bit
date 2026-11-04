@@ -6,21 +6,23 @@ Thumbs.db
 .vscode/
 *.log
 
-# Claude Code (개인 설정)
-.claude/
+# Claude Code
+.claude/*
+!.claude/settings.json
 CLAUDE.local.md
+skill-lock.json
 
 # env
 .env
 .env.*
 !.env.example
 
-# backend
+# Java (backend)
 backend/.gradle/
 backend/build/
 backend/out/
 
-# ai
+# Python (ai-server)
 ai-server/.venv/
 __pycache__/
 *.pyc
@@ -28,10 +30,11 @@ __pycache__/
 .ruff_cache/
 .mypy_cache/
 
-# frontend
+# Node.js (frontend)
 node_modules/
 dist/
 build/
+.next/
 
 # chrome extension 패키징 (서명 키 포함)
 *.pem
