@@ -7,6 +7,10 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
+app:
+  cors:
+    allowed-origins: ${WEB_ORIGIN:http://localhost:5173}
+
 springdoc:
   api-docs:
     enabled: true
