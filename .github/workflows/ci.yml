@@ -1,0 +1,127 @@
+# .github/workflows/ci.yml
+# P-bit 모노레포 CI — PR/push 시 "바뀐 파트만" 빌드·테스트한다.
+# 배포(CD)는 포함하지 않는다. 서버 연결 시 별도 워크플로로 추가.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+# 같은 PR에 새 커밋이 올라오면 이전 실행은 취소 (Actions 사용 시간 절약)
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # 1) 어떤 폴더가 바뀌었는지 확인
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      # ai: ${{ steps.filter.outputs.ai }}          # ai-server 코드가 생기면 주석 해제
+      # web: ${{ steps.filter.outputs.web }}        # frontend/web 코드가 생기면 주석 해제
+      # ext: ${{ steps.filter.outputs.ext }}        # frontend/extension 코드가 생기면 주석 해제
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - '.github/workflows/ci.yml'
+            ai:
+              - 'ai-server/**'
+            web:
+              - 'frontend/web/**'
+            ext:
+              - 'frontend/extension/**'
+
+  # 2) 백엔드: Spring Boot 빌드 + 테스트
+  backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend
+
+    # ApiApplicationTests가 앱 전체를 띄우면서 Flyway가 DB에 붙으므로 테스트용 PostgreSQL을 띄운다.
+    # 이미지 버전은 로컬 docker-compose와 같은 postgres:16 (백엔드 확인 완료)
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: pbit
+          POSTGRES_USER: pbit
+          POSTGRES_PASSWORD: pbit
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pbit"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    # CI 전용 더미 값. 실제 비밀값을 여기에 쓰지 않는다.
+    # 테스트는 local 프로필로 돈다 (WEB_ORIGIN 등은 불필요 — 백엔드 확인 완료)
+    env:
+      DB_URL: jdbc:postgresql://localhost:5432/pbit   # DB_URL을 주면 DB_NAME은 필요 없음
+      DB_USERNAME: pbit
+      DB_PASSWORD: pbit
+      # TODO(KAN-34 머지 후): JWT 코드가 들어오면 아래 줄 주석 해제
+      # JWT_SECRET: ci-only-dummy-secret-at-least-32-characters-long
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # Gradle 캐시 (두 번째 실행부터 빨라짐)
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Mac/Windows에서 커밋하면 실행 권한이 빠지는 경우가 있어 보정
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build & test
+        run: ./gradlew build --no-daemon
+
+      # 테스트가 실패하면 리포트를 내려받을 수 있게 업로드
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-report
+          path: backend/build/reports/tests/
+          retention-days: 7
+
+  # 3) 브랜치 보호의 "필수 체크"는 이 job 하나만 지정한다.
+  #    파트별 job이 건너뛰어져도(해당 폴더 변경 없음) 이 job이 결과를 대표한다.
+  ci-result:
+    if: always()
+    needs: [changes, backend]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check results
+        run: |
+          echo "changes: ${{ needs.changes.result }}"
+          echo "backend: ${{ needs.backend.result }}"
+          if [[ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "CI 실패 — 위 job 로그를 확인하세요."
+            exit 1
+          fi
+          echo "CI 통과"
