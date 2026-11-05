@@ -153,14 +153,22 @@ hotfix/* → main   ✅ (긴급 수정)
 | `chore` | 빌드, 설정 파일 수정 |
 | `hotfix` | 긴급 수정 |
 
-| Scope | 대상 폴더 |
+scope는 변경한 파일의 **담당 파트**입니다. 파트 소유 문서도 그 파트 scope를 씁니다 (예: `docs(be)`).
+
+| Scope | 대상 |
 | --- | --- |
-| `be` | `backend/` |
-| `llm` | `ai-server/` |
+| `be` | `backend/`, 백엔드 기술 명세 |
+| `llm` | `ai-server/`, `docs/dev/llm/` |
 | `web` | `frontend/web/` |
 | `ext` | `frontend/extension/` |
-| `infra` | `docker-compose.yml`, `.github/` |
-| `docs` | `docs/` |
+| `fe` | `frontend/` 공통, 프론트엔드 기술 명세 |
+| `infra` | `docker-compose.yml`, `.github/workflows/`, `docs/ops/`, 클라우드 기술 명세 |
+| `de` | `docs/brand/` |
+| `ai` | 루트 `CLAUDE.md`, `.claude/`, `.mcp.json`, `docs/dev/ai/` |
+| `repo` | `.gitignore`, 루트 `.env.example`, `.github/CODEOWNERS`, PR 템플릿 |
+| `docs` | `README.md`, `CONTRIBUTING.md`, `docs/planning/`, `docs/dev/specs/`, `docs/adr/` |
+
+> 판단 기준과 예시는 [CONTRIBUTING.md 1.3 Scope 정의](CONTRIBUTING.md#13-scope-정의)를 참고하세요.
 
 예시
 

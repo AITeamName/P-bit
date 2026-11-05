@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-> **최종 수정일:** 2026-11-03 
+> **최종 수정일:** 2026-11-05 
 > **기준 브랜치:** `develop` (기본 브랜치), `main` (배포/릴리즈)
 
 ---
@@ -63,19 +63,42 @@ chore/KAN-29-monorepo-setup
 
 **이 표에 없는 scope는 사용하지 않습니다.**
 
-| 파트 | scope | 위치 |
-| --- | --- | --- |
-| 백엔드 (Spring Boot) | `be` | `backend/` |
-| LLM 서버 (FastAPI) | `llm` | `ai-server/` |
-| 웹 프론트엔드 | `web` | `frontend/web/` |
-| 크롬 익스텐션 | `ext` | `frontend/extension/` |
-| 인프라·CI/CD | `infra` | `docker-compose.yml`, `.github/` |
-| 문서 | `docs` | `docs/` |
+scope는 변경한 파일의 **담당 파트**입니다. 문서인지 코드인지는 type(`docs`, `feat` 등)으로 구분합니다.
 
-scope 판단 기준:
+| 파트 | scope | 코드·설정 | 문서 |
+| --- | --- | --- | --- |
+| 백엔드 (Spring Boot) | `be` | `backend/` | `docs/dev/design/backend-tech-spec.md` |
+| LLM 서버 (FastAPI) | `llm` | `ai-server/` | `docs/dev/llm/` |
+| 웹 프론트엔드 | `web` | `frontend/web/` | |
+| 크롬 익스텐션 | `ext` | `frontend/extension/` | |
+| 프론트엔드 공통 | `fe` | `frontend/` 공통 (`AGENTS.md`, `CLAUDE.md` 등) | `docs/dev/design/frontend-tech-spec.md` |
+| 인프라·CI/CD | `infra` | `docker-compose.yml`, `.github/workflows/` | `docs/ops/`, `docs/dev/design/cloud-tech-spec.md` |
+| 디자인 | `de` | | `docs/brand/` |
+| AI 협업 도구 | `ai` | 루트 `CLAUDE.md`, `.claude/`, `.mcp.json` | `docs/dev/ai/` |
+| 레포 설정 | `repo` | `.gitignore`, 루트 `.env.example`, `.github/CODEOWNERS`, `.github/pull_request_template.md`, 폴더 구조 | |
+| 팀 공통 문서 | `docs` | | `README.md`, `CONTRIBUTING.md`, `docs/planning/`, `docs/dev/specs/`, `docs/adr/` |
+
+예시:
+
+```bash
+docs(be): 백엔드 기술 명세 인증 절 수정 (KAN-35)    # 파트 소유 문서
+docs(docs): README 로컬 실행 방법 갱신 (KAN-31)     # 팀 공통 문서
+chore(ai): Claude Code 공용 설정 추가 (KAN-41)      # AI 협업 설정
+chore(repo): CODEOWNERS 담당자 추가 (KAN-40)        # 레포 설정
+```
+
+scope 판단 기준 (위에서부터 처음 맞는 것):
+
+1. 파트 폴더 안의 파일이거나 파트 소유 문서면 그 파트 scope를 씁니다. `backend/AGENTS.md`, `backend/.env.example`도 `be`입니다.
+2. AI 협업 설정이면 `ai`를 씁니다.
+3. 팀 공통 문서면 `docs`를 씁니다.
+4. 그 외 루트 설정은 `repo`를 씁니다.
+
+여러 scope에 걸친 변경:
 
 1. 한 PR이 두 scope를 건드리면 PR을 쪼갤 수 있는지 먼저 검토합니다.
 2. 쪼갤 수 없으면 변경의 주된 목적이 속한 scope 하나만 씁니다.
+3. 여러 파트가 함께 승인해야 하는 계약 파일(`docs/dev/specs/interfaces.md` 등)도 위치 기준으로 scope를 정합니다. 승인은 `CODEOWNERS`가 강제합니다.
 
 ---
 
