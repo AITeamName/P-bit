@@ -23,6 +23,7 @@ jobs:
   # 1) 어떤 폴더가 바뀌었는지 확인
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       backend: ${{ steps.filter.outputs.backend }}
       # ai: ${{ steps.filter.outputs.ai }}          # ai-server 코드가 생기면 주석 해제
@@ -113,6 +114,7 @@ jobs:
     if: always()
     needs: [changes, backend]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Check results
         run: |
