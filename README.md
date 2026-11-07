@@ -1,4 +1,4 @@
-₩# 🎯 P-bit (Prompt Trainer)
+# 🎯 P-bit (Prompt Trainer)
 
 AI 프롬프트 작성 능력을 향상시키는 질문력 트레이너 서비스의 **모노레포**입니다. 
 백엔드 · AI Server · 프론트(웹 / 크롬 익스텐션)가 하나의 레포에서 함께 관리됩니다.
