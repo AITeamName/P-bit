@@ -3,13 +3,34 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 46px;
-  padding: 0 32px;
   border: 0;
   border-radius: var(--radius-md);
   font: 600 16px/22px var(--font-sans);
   cursor: pointer;
   white-space: nowrap;
+}
+.btn-l {
+  height: 46px;
+  padding: 0 32px;
+}
+.btn-m {
+  height: 40px;
+  padding: 0 24px;
+}
+.btn-s {
+  padding: 7px 15px;
+  border: 1px solid var(--gray-400);
+  background: var(--gray-100);
+  color: var(--gray-700);
+  font: 500 14px/22px var(--font-sans);
+}
+.btn-s:hover {
+  background: var(--purple-200);
+  border-color: var(--purple-400);
+}
+.btn-s:active {
+  background: var(--purple-300);
+  border-color: var(--purple-400);
 }
 .btn-solid {
   background: var(--purple-500);

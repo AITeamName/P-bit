@@ -1,12 +1,16 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, InputHTMLAttributes } from 'react'
 import './components.css'
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'solid' | 'lined'
-}
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
+  (
+    | { size?: 'l'; variant?: 'solid' | 'lined' }
+    | { size: 'm'; variant?: never }
+    | { size: 's'; variant?: never; disabled?: never }
+  )
 
-export function Button({ variant = 'solid', className = '', type = 'button', ...rest }: ButtonProps) {
-  return <button type={type} className={`btn btn-${variant} ${className}`.trim()} {...rest} />
+export function Button({ size = 'l', variant, className = '', type = 'button', ...rest }: ButtonProps) {
+  const look = size === 's' ? 'btn-s' : `btn-${size} btn-${variant ?? 'solid'}`
+  return <button type={type} className={`btn ${look} ${className}`.trim()} {...rest} />
 }
 
 export function Link({ className = '', ...rest }: AnchorHTMLAttributes<HTMLAnchorElement>) {
