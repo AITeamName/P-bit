@@ -1,0 +1,26 @@
+:root {
+  --purple-100: #f4eeff;
+  --purple-300: #d0b3fe;
+  --purple-400: #bb8ef9;
+  --purple-500: #9351dc;
+  --purple-600: #7500c5;
+  --purple-700: #5e00a0;
+  --purple-900: #220b3f;
+
+  --gray-100: #f7f8f9;
+  --gray-200: #dce4f5;
+  --gray-300: #cad3e7;
+  --gray-400: #b2bdd2;
+  --gray-600: #6c7890;
+  --gray-700: #414c64;
+  --gray-800: #151f36;
+
+  --success: #20bd37;
+  --error-border: #fb595c;
+  --error-text: #d83b1f;
+
+  --radius-sm: 4px;
+  --radius-md: 16px;
+
+  --font-sans: 'Pretendard', system-ui, 'Segoe UI', sans-serif;
+}
