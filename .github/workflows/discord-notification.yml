@@ -65,7 +65,7 @@ jobs:
                       body, flags=re.M | re.S,
                   )
                   value = match.group(1).strip() if match else ""
-                  return value[:800] or "-"
+                  return value[:600] or "-"
 
               merged = action == "closed"
               base_fields = [
@@ -75,15 +75,15 @@ jobs:
               ]
 
               if merged:
-                  title = "🟣 PR 머지"
-                  ids = list(reviewer_map.values())
-                  content = " ".join(f"<@{uid}>" for uid in ids) + " PR 머지됐습니다." if ids else ""
+                  title = "🟣 PR 병합"
+                  ids = []
+                  content = ""
                   fields = base_fields
               else:
-                  title = "🟢 PR 오픈"
+                  title = "🟢 PR 리뷰 요청"
                   requested_logins = [r["login"].casefold() for r in pr.get("requested_reviewers", [])]
                   ids = [reviewer_map[login] for login in requested_logins if login in reviewer_map]
-                  content = " ".join(f"<@{uid}>" for uid in ids) + " PR 리뷰 요청됐습니다." if ids else ""
+                  content = " ".join(f"<@{uid}>" for uid in ids) + " PR 리뷰 부탁드립니다." if ids else ""
                   fields = base_fields + [
                       {"name": "개요",      "value": section("개요"),      "inline": False},
                       {"name": "리뷰어에게", "value": section("리뷰어에게"), "inline": False},
