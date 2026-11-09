@@ -1,4 +1,5 @@
-const raw: string = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api/v1'
+const raw: string | undefined = import.meta.env.VITE_API_BASE_URL
+if (!raw) throw new Error('VITE_API_BASE_URL이 설정되지 않았습니다. .env.example을 .env로 복사하세요.')
 
 export const API_BASE_URL = raw.replace(/\/+$/, '')
 
