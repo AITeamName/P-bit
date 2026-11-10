@@ -77,19 +77,23 @@ export function createApiClient(options: ClientOptions) {
 
   async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
     const idempotencyKey = opts.idempotent ? crypto.randomUUID() : undefined
+    const sentToken = accessToken
     let res = await send(path, opts, idempotencyKey)
 
     if (res.status === 401 && opts.auth !== false) {
       const failure = await toApiError(res.clone())
       if (REFRESHABLE_CODES.has(failure.code)) {
-        try {
-          await refreshSession()
-        } catch (e) {
-          if (e instanceof ApiError && e.status === 401) {
-            accessToken = null
-            options.onAuthFailure?.()
+        // 이 요청이 나간 뒤 다른 요청이 이미 재발급했다면 다시 재발급하지 않고 현재 토큰으로 재시도한다.
+        if (accessToken === sentToken) {
+          try {
+            await refreshSession()
+          } catch (e) {
+            if (e instanceof ApiError && e.status === 401) {
+              accessToken = null
+              options.onAuthFailure?.()
+            }
+            throw e
           }
-          throw e
         }
         res = await send(path, opts, idempotencyKey)
       }
