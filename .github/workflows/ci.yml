@@ -27,7 +27,7 @@ jobs:
     outputs:
       backend: ${{ steps.filter.outputs.backend }}
       # ai: ${{ steps.filter.outputs.ai }}          # ai-server 코드가 생기면 주석 해제
-      # web: ${{ steps.filter.outputs.web }}        # frontend/web 코드가 생기면 주석 해제
+      web: ${{ steps.filter.outputs.web }}
       # ext: ${{ steps.filter.outputs.ext }}        # frontend/extension 코드가 생기면 주석 해제
     steps:
       - uses: actions/checkout@v4
@@ -42,6 +42,7 @@ jobs:
               - 'ai-server/**'
             web:
               - 'frontend/web/**'
+              - '.github/workflows/ci.yml'
             ext:
               - 'frontend/extension/**'
 
@@ -108,11 +109,42 @@ jobs:
           path: backend/build/reports/tests/
           retention-days: 7
 
-  # 3) 브랜치 보호의 "필수 체크"는 이 job 하나만 지정한다.
+  # 3) 웹: Vite + React + TypeScript 린트 + 빌드
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend/web
+    # VITE_API_BASE_URL은 기본값 없는 필수 값(KAN-48) → CI 빌드용 더미 값. 실제 주소 아님
+    env:
+      VITE_API_BASE_URL: http://localhost:8080/api/v1
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 버전은 frontend/web/.nvmrc(20.19)를 그대로 따른다 → 로컬과 CI가 같은 버전
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: frontend/web/.nvmrc
+          cache: npm
+          cache-dependency-path: frontend/web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+  # 4) 브랜치 보호의 "필수 체크"는 이 job 하나만 지정한다.
   #    파트별 job이 건너뛰어져도(해당 폴더 변경 없음) 이 job이 결과를 대표한다.
   ci-result:
     if: always()
-    needs: [changes, backend]
+    needs: [changes, backend, web]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -120,6 +152,7 @@ jobs:
         run: |
           echo "changes: ${{ needs.changes.result }}"
           echo "backend: ${{ needs.backend.result }}"
+          echo "web: ${{ needs.web.result }}"
           if [[ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
             echo "CI 실패 — 위 job 로그를 확인하세요."
             exit 1

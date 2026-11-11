@@ -121,7 +121,7 @@ hotfix/* → main   ✅ (긴급 수정)
 | --- | --- | --- | --- |
 | BE | `backend/**` 변경 | `./gradlew build` (컴파일 + 테스트) | ✅ 적용 |
 | AI | `ai-server/**` 변경 | 린트 + `pytest` | ⏳ 코드 생성 후 추가 |
-| FE 웹 | `frontend/web/**` 변경 | `npm ci` → lint → build | ⏳ 코드 생성 후 추가 |
+| FE 웹 | `frontend/web/**` 변경 | `npm ci` → lint → build | ✅ 적용 |
 | FE 익스텐션 | `frontend/extension/**` 변경 | `npm ci` → lint → build | ⏳ 코드 생성 후 추가 |
 
 ### 머지 규칙
