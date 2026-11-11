@@ -28,7 +28,7 @@ PR 전에 `npm run lint && npm run build`가 통과해야 합니다.
 
 ## 환경 변수
 
-`VITE_API_BASE_URL`: 백엔드 API 주소 (기본값 `http://localhost:8080/api/v1`)
+`VITE_API_BASE_URL`: 백엔드 API 주소 (필수, 로컬 값은 `.env.example`에 있음)
 
 `.env`는 커밋하지 않습니다. `VITE_`로 시작하는 값은 브라우저에 그대로 노출되므로 비밀 값을 넣지 않습니다.
 
