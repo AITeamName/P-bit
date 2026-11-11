@@ -120,9 +120,10 @@ P-bit 맥락 예시:
 반드시 작성한다.
 브랜치 이름의 KAN-번호로 Jira 이슈가 자동 연결되지만,
 PR 본문에도 명시해 리뷰어가 이슈 맥락을 바로 확인할 수 있도록 한다.
+형식: [KAN-번호](https://ppbbit.atlassian.net/browse/KAN-번호)
 -->
 
-- KAN-
+- [KAN-](https://ppbbit.atlassian.net/browse/KAN-)
 
 ## 📷 스크린샷 / 로그 (선택)
 
