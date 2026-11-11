@@ -15,6 +15,7 @@ permissions:
 jobs:
   notify:
     runs-on: ubuntu-latest
+    timeout-minutes: 5          # 웹훅/API hang 방지
     env:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       DISCORD_REVIEWER_MAP: ${{ vars.DISCORD_REVIEWER_MAP }}
