@@ -23,7 +23,10 @@ public enum ErrorCode {
 	INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호를 확인해주세요.", false),
 	TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "로그인이 만료되었어요.", false),
 	TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "다시 로그인해주세요.", false),
-	REFRESH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "다시 로그인해주세요.", false);
+	REFRESH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "다시 로그인해주세요.", false),
+
+	// 약관
+	TERM_NOT_FOUND(HttpStatus.NOT_FOUND, "약관을 찾을 수 없어요.", false);
 
 	private final HttpStatus status; // HTTP 상태 응답
 	private final String userMessage; // 화면에 표시할 문구
