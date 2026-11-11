@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pbit.api.domain.term.dto.TermDetailResponse;
 import com.pbit.api.domain.term.dto.TermSummaryResponse;
+import com.pbit.api.domain.term.entity.TermCode;
 import com.pbit.api.domain.term.service.TermService;
 import com.pbit.api.global.error.ErrorResponse;
 
@@ -42,7 +43,7 @@ public class TermController {
 	@GetMapping("/{termCode}")
 	public TermDetailResponse getTerm(
 		@Parameter(description = "약관 코드", example = "PRIVACY",
-			schema = @Schema(allowableValues = {"SERVICE", "PRIVACY", "MARKETING"}))
+			schema = @Schema(implementation = TermCode.class))
 		@PathVariable String termCode
 	) {
 		return termService.getCurrentTerm(termCode);
