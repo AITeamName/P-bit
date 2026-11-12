@@ -32,7 +32,7 @@ export function TextField({ label, message, status, id, className = '', ...rest 
         </label>
       )}
       <input id={id} className="field-input" aria-invalid={status === 'error' || undefined} {...rest} />
-      {status && message && <p className="field-message">{message}</p>}
+      {message && <p className="field-message">{message}</p>}
     </div>
   )
 }
