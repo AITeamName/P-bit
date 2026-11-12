@@ -6,7 +6,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   (
     | { size?: 'l'; variant?: 'solid' | 'lined' }
     | { size: 'm'; variant?: never }
-    | { size: 's'; variant?: never; disabled?: never }
+    | { size: 's'; variant?: never }
   )
 
 export function Button({ size = 'l', variant, className = '', type = 'button', ...rest }: ButtonProps) {
