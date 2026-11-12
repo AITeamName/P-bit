@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, InputHTMLAttributes } from 'react'
 import './components.css'
 
@@ -24,15 +25,28 @@ type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 }
 
 export function TextField({ label, message, status, id, className = '', ...rest }: TextFieldProps) {
+  const autoId = useId()
+  const inputId = id ?? autoId
+  const messageId = `${inputId}-message`
   return (
     <div className={`field ${status ? `field-${status}` : ''} ${className}`.trim()}>
       {label && (
-        <label className="field-label" htmlFor={id}>
+        <label className="field-label" htmlFor={inputId}>
           {label}
         </label>
       )}
-      <input id={id} className="field-input" aria-invalid={status === 'error' || undefined} {...rest} />
-      {message && <p className="field-message">{message}</p>}
+      <input
+        id={inputId}
+        className="field-input"
+        aria-invalid={status === 'error' || undefined}
+        aria-describedby={message ? messageId : undefined}
+        {...rest}
+      />
+      {message && (
+        <p id={messageId} className="field-message">
+          {message}
+        </p>
+      )}
     </div>
   )
 }
