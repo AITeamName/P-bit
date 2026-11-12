@@ -16,7 +16,8 @@
   --gray-700: #414c64;
   --gray-800: #151f36;
 
-  --success: #20bd37;
+  --success-border: #20bd37;
+  --success-text: #20bd37;
   --error-border: #fb595c;
   --error-text: #d83b1f;
 

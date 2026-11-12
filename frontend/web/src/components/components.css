@@ -96,13 +96,13 @@
   background: var(--gray-200);
   color: var(--gray-600);
 }
-.field-success .field-input { border-color: var(--success); }
+.field-success .field-input { border-color: var(--success-border); }
 .field-error .field-input { border-color: var(--error-border); }
 .field-message {
   padding-left: 8px;
   font: 500 12px/18px var(--font-sans);
 }
-.field-success .field-message { color: var(--success); }
+.field-success .field-message { color: var(--success-text); }
 .field-error .field-message { color: var(--error-text); }
 
 .checkbox {
