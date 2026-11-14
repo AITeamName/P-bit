@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-export type AuthStatus = 'loading' | 'authenticated' | 'anonymous'
+export type AuthStatus = 'loading' | 'authenticated' | 'anonymous' | 'unavailable'
 
 export type Session = {
   userId: string

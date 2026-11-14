@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { api, setAuthFailureHandler } from '../api'
+import { api, ApiError, setAuthFailureHandler } from '../api'
 import { AuthContext } from './authContext.ts'
 import type { AuthStatus, Session } from './authContext.ts'
 
@@ -41,8 +41,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUserId(me.userId ?? null)
         setOnboardingCompleted(me.onboardingCompleted === true)
         setStatus('authenticated')
-      } catch {
-        if (!cancelled) signOut()
+      } catch (error) {
+        if (cancelled) return
+        if (error instanceof ApiError && error.status === 401) {
+          signOut()
+        } else {
+          // 서버 장애, 네트워크 끊김은 로그아웃과 구분하고 원인을 남긴다.
+          console.error('로그인 상태를 확인하지 못했습니다', error)
+          setStatus('unavailable')
+        }
       }
     })()
     return () => {
