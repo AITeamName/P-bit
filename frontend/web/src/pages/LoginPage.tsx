@@ -3,6 +3,8 @@ import type { SubmitEvent } from 'react'
 import { Link as RouterLink, useNavigate } from 'react-router'
 import { api, ApiError, GOOGLE_LOGIN_URL } from '../api'
 import { Button, Header, TextField } from '../components'
+import Text from '../i18n/Text.tsx'
+import { t } from '../i18n/messages.ts'
 import { useAuth } from '../stores/authContext.ts'
 import './LoginPage.css'
 
@@ -44,13 +46,15 @@ export default function LoginPage() {
       <main className="auth-main">
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="auth-top">
-            <h1 className="auth-title">계정 로그인</h1>
+            <h1 className="auth-title">
+              <Text id="login.title" />
+            </h1>
             <div className="auth-fields">
               <TextField
                 id="email"
                 type="email"
-                label="이메일"
-                placeholder="abcde@gmail.com"
+                label={t('login.email')}
+                placeholder={t('login.emailPlaceholder')}
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -58,8 +62,8 @@ export default function LoginPage() {
               <TextField
                 id="password"
                 type="password"
-                label="비밀번호"
-                placeholder="Password"
+                label={t('login.password')}
+                placeholder={t('login.passwordPlaceholder')}
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -71,22 +75,26 @@ export default function LoginPage() {
           <div className="auth-actions">
             <div className="auth-buttons">
               <Button type="submit" disabled={submitting}>
-                로그인
+                <Text id="login.submit" />
               </Button>
-              <div className="auth-or">또는</div>
+              <div className="auth-or">
+                <Text id="login.or" />
+              </div>
               <button
                 type="button"
                 className="google-btn"
                 onClick={() => window.location.assign(GOOGLE_LOGIN_URL)}
               >
                 <img src="/icons/google.svg" alt="" />
-                Google로 계속
+                <Text id="login.google" />
               </button>
             </div>
             <div className="auth-signup">
-              <span>계정이 없으신가요?</span>
+              <span>
+                <Text id="login.noAccount" />
+              </span>
               <RouterLink className="link" to="/join/terms">
-                회원가입
+                <Text id="login.signup" />
               </RouterLink>
             </div>
           </div>

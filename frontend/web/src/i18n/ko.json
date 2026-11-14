@@ -1,0 +1,12 @@
+{
+  "login.title": "계정 로그인",
+  "login.email": "이메일",
+  "login.emailPlaceholder": "abcde@gmail.com",
+  "login.password": "비밀번호",
+  "login.passwordPlaceholder": "Password",
+  "login.submit": "로그인",
+  "login.or": "또는",
+  "login.google": "Google로 계속",
+  "login.noAccount": "계정이 없으신가요?",
+  "login.signup": "회원가입"
+}
