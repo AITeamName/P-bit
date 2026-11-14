@@ -1,3 +1,8 @@
+@import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+@import './styles/tokens.css';
+
 body {
   margin: 0;
+  font-family: var(--font-sans);
+  color: var(--gray-800);
 }
