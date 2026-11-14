@@ -1,8 +1,12 @@
+/* 앱 전체 기본 스타일 */
+
+/* Pretendard 폰트 (화면에 쓰는 글자 조각만 내려받는 방식) */
 @import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+/* 공통 값 (색상, 글꼴 변수) */
 @import './styles/tokens.css';
 
 body {
-  margin: 0;
-  font-family: var(--font-sans);
-  color: var(--gray-800);
+  margin: 0; /* 브라우저 기본 바깥 여백 제거 */
+  font-family: var(--font-sans); /* 전체 글꼴 */
+  color: var(--gray-800); /* 기본 글자색 */
 }

@@ -1,14 +1,19 @@
+/* 공통 부품 모양 (색과 모서리는 styles/tokens.css 변수 사용) */
+
+/* ===== 버튼 ===== */
+/* 모든 버튼 공통 모양 */
 .btn {
-  box-sizing: border-box;
+  box-sizing: border-box; /* 테두리를 포함해 크기 계산 */
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* 글자 세로 가운데 */
+  justify-content: center; /* 글자 가로 가운데 */
   border: 0;
   border-radius: var(--radius-md);
   font: 600 16px/22px var(--font-sans);
   cursor: pointer;
-  white-space: nowrap;
+  white-space: nowrap; /* 글자 줄바꿈 방지 */
 }
+/* 크기별 높이와 좌우 여백 */
 .btn-l {
   height: 46px;
   padding: 0 32px;
@@ -17,6 +22,7 @@
   height: 40px;
   padding: 0 24px;
 }
+/* 작은 버튼: 회색 바탕에 테두리, 테두리 1px 포함 높이 38px에 맞춰 여백 축소 */
 .btn-s {
   padding: 7px 15px;
   border: 1px solid var(--gray-400);
@@ -24,20 +30,22 @@
   color: var(--gray-700);
   font: 500 14px/22px var(--font-sans);
 }
-.btn-s:hover {
+.btn-s:hover { /* 마우스 오버 */
   background: var(--purple-200);
   border-color: var(--purple-400);
 }
-.btn-s:active {
+.btn-s:active { /* 누르는 중 */
   background: var(--purple-300);
   border-color: var(--purple-400);
 }
+/* 꽉 찬 모양(solid): 보라색 바탕, 오버하면 진하게, 누르면 가장 진하게 */
 .btn-solid {
   background: var(--purple-500);
   color: var(--purple-100);
 }
 .btn-solid:hover { background: var(--purple-600); }
 .btn-solid:active { background: var(--purple-700); }
+/* 테두리만 있는 모양(lined): 바탕 없이 보라색 테두리 */
 .btn-lined {
   background: transparent;
   color: var(--purple-500);
@@ -45,34 +53,38 @@
 }
 .btn-lined:hover { border-color: var(--purple-400); }
 .btn-lined:active { border-color: var(--purple-500); }
+/* 비활성(누를 수 없음): 모든 버튼 같은 회색, 위의 hover/active보다 뒤에 있어서 우선 적용 */
 .btn:disabled {
   background: var(--gray-200);
   color: var(--gray-600);
   border: 0;
   cursor: not-allowed;
 }
+/* 작은 버튼은 비활성에서도 높이 유지: 테두리 자리(1px)를 투명으로 남김 */
 .btn-s:disabled {
   border: 1px solid transparent;
 }
 
+/* ===== 링크(글자 링크) ===== */
 .link {
   background: none;
   border: 0;
   padding: 0;
   font: 600 14px/22px var(--font-sans);
   color: var(--purple-500);
-  text-decoration: none;
+  text-decoration: none; /* 밑줄 없음 */
   cursor: pointer;
 }
 .link:hover { color: var(--purple-600); }
 .link:active { color: var(--purple-700); }
 
+/* ===== 입력창 묶음(레이블 + 입력창 + 안내 문구) ===== */
 .field {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* 위에서 아래로 쌓기 */
   gap: 8px;
   width: 480px;
-  max-width: 100%;
+  max-width: 100%; /* 화면이 좁으면 화면 폭까지만 */
 }
 .field-label {
   font: 600 14px/22px var(--font-sans);
@@ -81,23 +93,26 @@
 .field-input {
   box-sizing: border-box;
   width: 100%;
+  /* 테두리 1px을 고려해 위아래 11px, 좌우 15px (전체 높이 46px) */
   padding: 11px 15px;
   border: 1px solid var(--gray-300);
   border-radius: var(--radius-md);
   background: var(--gray-100);
   font: 500 16px/22px var(--font-sans);
   color: var(--gray-700);
-  outline: none;
-  caret-color: var(--purple-600);
+  outline: none; /* 브라우저 기본 파란 테두리 제거 (아래에서 직접 색 지정) */
+  caret-color: var(--purple-600); /* 입력 위치 깜빡이는 막대 색 */
 }
-.field-input::placeholder { color: var(--gray-600); }
-.field-input:focus { border-color: var(--purple-300); }
-.field-input:disabled {
+.field-input::placeholder { color: var(--gray-600); } /* 입력 전 안내 글자 */
+.field-input:focus { border-color: var(--purple-300); } /* 커서가 들어간 상태 */
+.field-input:disabled { /* 입력 불가 상태 */
   background: var(--gray-200);
   color: var(--gray-600);
 }
+/* 성공/오류 상태 테두리 색 */
 .field-success .field-input { border-color: var(--success-border); }
 .field-error .field-input { border-color: var(--error-border); }
+/* 안내 문구: 색은 상태에 따라서만 지정, 상태가 없으면 바깥 글자색을 따름 */
 .field-message {
   padding-left: 8px;
   font: 500 12px/18px var(--font-sans);
@@ -105,8 +120,9 @@
 .field-success .field-message { color: var(--success-text); }
 .field-error .field-message { color: var(--error-text); }
 
+/* ===== 체크박스 ===== */
 .checkbox {
-  position: relative;
+  position: relative; /* 체크 표시(::after)를 상자 안에 겹치기 위한 기준 */
   box-sizing: border-box;
   width: 24px;
   height: 24px;
@@ -114,22 +130,26 @@
   border: 1px solid var(--gray-400);
   border-radius: var(--radius-sm);
   background: transparent;
-  appearance: none;
+  appearance: none; /* 브라우저 기본 체크박스 모양 제거 (직접 그림) */
   cursor: pointer;
 }
+/* 체크된 상태: 보라색 바탕 */
 .checkbox:checked {
   background: var(--purple-500);
   border-color: var(--purple-500);
 }
+/* 체크 표시: 체크 모양 이미지(check.svg)를 마스크로 쓰고 밝은 보라색으로 채움
+   (체크 색을 이미지 파일 대신 색상 변수로 변경 가능) */
 .checkbox:checked::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: 0; /* 상자 전체를 덮음 */
   background: var(--purple-100);
-  -webkit-mask: url('/icons/check.svg') center / 12px 9px no-repeat;
+  -webkit-mask: url('/icons/check.svg') center / 12px 9px no-repeat; /* 일부 브라우저용 */
   mask: url('/icons/check.svg') center / 12px 9px no-repeat;
 }
 
+/* ===== 머리말 ===== */
 .header {
   box-sizing: border-box;
   display: flex;
@@ -138,7 +158,7 @@
   padding: 32px 64px 16px;
   background: var(--gray-100);
 }
-.header-logo {
+.header-logo { /* 로고 자리 (지금은 회색 네모) */
   width: 48px;
   height: 48px;
   border-radius: var(--radius-md);
