@@ -27,11 +27,12 @@ import com.pbit.api.domain.term.service.TermService;
 import com.pbit.api.global.config.CorsConfig;
 import com.pbit.api.global.config.SecurityConfig;
 import com.pbit.api.global.error.ErrorResponseWriter;
+import com.pbit.api.support.TestJwtConfig;
 
 // 웹 계층 + 서비스만 띄운다. 리포지토리는 목이라 DB 없이 실행된다.
 // 모든 요청을 인증 없이 보낸다 (permitAll 확인).
 @WebMvcTest(controllers = TermController.class)
-@Import({TermService.class, SecurityConfig.class, CorsConfig.class, ErrorResponseWriter.class})
+@Import({TermService.class, SecurityConfig.class, CorsConfig.class, ErrorResponseWriter.class, TestJwtConfig.class})
 class TermControllerTest {
 
 	private static final Instant EFFECTIVE_AT = Instant.parse("2026-11-01T00:00:00Z");
