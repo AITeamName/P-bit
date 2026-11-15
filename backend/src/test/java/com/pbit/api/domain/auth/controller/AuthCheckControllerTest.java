@@ -12,16 +12,22 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.pbit.api.domain.auth.service.RefreshTokenService;
 import com.pbit.api.domain.auth.service.SignupService;
+import com.pbit.api.domain.term.repository.TermRepository;
 import com.pbit.api.domain.user.repository.UserRepository;
+import com.pbit.api.domain.user.repository.UserTermAgreementRepository;
+import com.pbit.api.global.config.ClockConfig;
 import com.pbit.api.global.config.CorsConfig;
+import com.pbit.api.global.config.PasswordEncoderConfig;
 import com.pbit.api.global.config.SecurityConfig;
 import com.pbit.api.global.error.ErrorResponseWriter;
 import com.pbit.api.support.TestJwtConfig;
 
 // 이메일·닉네임 중복 확인. 리포지토리는 목이라 DB 없이 실행된다. 모든 요청을 인증 없이 보낸다.
 @WebMvcTest(controllers = AuthController.class)
-@Import({SignupService.class, SecurityConfig.class, CorsConfig.class, ErrorResponseWriter.class, TestJwtConfig.class})
+@Import({SignupService.class, SecurityConfig.class, CorsConfig.class, ErrorResponseWriter.class, TestJwtConfig.class,
+		PasswordEncoderConfig.class, ClockConfig.class})
 class AuthCheckControllerTest {
 
 	@Autowired
@@ -29,6 +35,16 @@ class AuthCheckControllerTest {
 
 	@MockitoBean
 	private UserRepository userRepository;
+
+	// 회원가입(SignupService.signup)에서만 쓰는 의존성
+	@MockitoBean
+	private UserTermAgreementRepository userTermAgreementRepository;
+
+	@MockitoBean
+	private TermRepository termRepository;
+
+	@MockitoBean
+	private RefreshTokenService refreshTokenService;
 
 	@Test
 	void 가입되지_않은_이메일이면_available_true() throws Exception {
