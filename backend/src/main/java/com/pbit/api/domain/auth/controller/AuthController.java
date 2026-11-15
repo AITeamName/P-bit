@@ -66,7 +66,8 @@ public class AuthController {
 	@GetMapping("/check-email")
 	public AvailabilityResponse checkEmail(
 		@Parameter(description = "확인할 이메일", example = "dohyun@example.com")
-		@RequestParam @NotBlank @Size(max = UserRules.EMAIL_MAX) @Pattern(regexp = UserRules.EMAIL_PATTERN) String email
+		@RequestParam @NotBlank(message = UserRules.EMAIL_MESSAGE) @Size(max = UserRules.EMAIL_MAX, message = UserRules.EMAIL_MESSAGE)
+		@Pattern(regexp = UserRules.EMAIL_PATTERN, message = UserRules.EMAIL_MESSAGE) String email
 	) {
 		return new AvailabilityResponse(signupService.isEmailAvailable(email));
 	}
@@ -79,8 +80,8 @@ public class AuthController {
 	@GetMapping("/check-nickname")
 	public AvailabilityResponse checkNickname(
 		@Parameter(description = "확인할 닉네임 (2~10자)", example = "도현")
-		@RequestParam @Size(min = UserRules.NICKNAME_MIN, max = UserRules.NICKNAME_MAX)
-		@Pattern(regexp = UserRules.NICKNAME_PATTERN) String nickname
+		@RequestParam @Size(min = UserRules.NICKNAME_MIN, max = UserRules.NICKNAME_MAX, message = UserRules.NICKNAME_MESSAGE)
+		@Pattern(regexp = UserRules.NICKNAME_PATTERN, message = UserRules.NICKNAME_MESSAGE) String nickname
 	) {
 		return new AvailabilityResponse(signupService.isNicknameAvailable(nickname));
 	}

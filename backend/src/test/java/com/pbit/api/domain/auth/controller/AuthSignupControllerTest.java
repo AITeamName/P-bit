@@ -107,7 +107,11 @@ class AuthSignupControllerTest {
 				.andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"))
 				.andExpect(jsonPath("$.error.fieldErrors[*].field", hasItem("email")))
 				.andExpect(jsonPath("$.error.fieldErrors[*].field", hasItem("password")))
-				.andExpect(jsonPath("$.error.fieldErrors[*].field", hasItem("nickname")));
+				.andExpect(jsonPath("$.error.fieldErrors[*].field", hasItem("nickname")))
+				// 정규식 대신 화면에 쓸 수 있는 문구가 나간다
+				.andExpect(jsonPath("$.error.fieldErrors[*].reason", hasItem("8~20자 영문, 숫자, 특수문자를 포함해주세요")))
+				.andExpect(jsonPath("$.error.fieldErrors[*].reason", hasItem("올바른 이메일 형식이 아니에요")))
+				.andExpect(jsonPath("$.error.fieldErrors[*].reason", hasItem("2~10자로 입력해주세요")));
 		verify(signupService, never()).signup(any());
 	}
 
