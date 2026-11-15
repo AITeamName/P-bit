@@ -16,6 +16,13 @@ app:
   cors:
     # 쉼표로 여러 개 지정
     allowed-origins: ${WEB_ORIGIN}
+  jwt:
+    # HS256 서명 키. 32바이트(256비트) 이상
+    secret: ${JWT_SECRET}
+    access-token-ttl: 30m
+    refresh-token-ttl: 14d
+  refresh-cookie:
+    secure: true
 
 springdoc:
   api-docs:
