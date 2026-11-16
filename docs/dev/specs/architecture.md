@@ -103,7 +103,7 @@ flowchart TB
  
 - **보안그룹 체인:** ALB → EC2 #1(8080) → EC2 #2(Nginx 포트), EC2 #1 → RDS(5432). 그 외 인바운드는 막는다. SSH 포트는 열지 않고 SSM Session Manager로 접속한다.
 - **내부 토큰(`X-Internal-Token`):** Spring과 FastAPI가 같은 값을 쓴다. 값 생성·보관은 클라우드가 맡는다 — 개발용은 Discord 🔒 채널로만 공유, 테스트 환경은 두 서비스에 같은 값 등록, AWS는 Parameter Store 한 곳에 두고 두 서버가 읽는다. 변수 이름은 양쪽 모두 `AI_INTERNAL_TOKEN`으로 통일한다 (인터페이스 명세 논의 사항 #4).
-- **타임아웃:** 구간별 값은 인터페이스 명세 4.1을 따른다. 인프라가 추가로 맞출 값은 ALB idle timeout 120초뿐이다.
+- **타임아웃:** 구간별 값은 인터페이스 명세 4.1을 따른다. 인프라가 추가로 맞출 값은 ALB idle timeout 120초와 EC2 #2 Nginx의 `proxy_read_timeout 30s` · `client_max_body_size 1m`이다.
 - **로그:** 프롬프트 원문은 애플리케이션·Nginx·CloudWatch 로그에 남기지 않는다 (인터페이스 명세 7.3).
  
 ### 2.5 도메인·쿠키 (인프라 관점)
