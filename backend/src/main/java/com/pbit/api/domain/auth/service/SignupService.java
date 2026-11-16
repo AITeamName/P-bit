@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -100,15 +101,25 @@ public class SignupService {
 		try {
 			return userRepository.saveAndFlush(user);
 		} catch (DataIntegrityViolationException e) {
-			String message = String.valueOf(e.getMostSpecificCause().getMessage());
-			if (message.contains(EMAIL_UNIQUE)) {
+			String constraint = violatedConstraintName(e);
+			if (EMAIL_UNIQUE.equalsIgnoreCase(constraint)) {
 				throw new BusinessException(ErrorCode.EMAIL_DUPLICATED);
 			}
-			if (message.contains(NICKNAME_UNIQUE)) {
+			if (NICKNAME_UNIQUE.equalsIgnoreCase(constraint)) {
 				throw new BusinessException(ErrorCode.NICKNAME_DUPLICATED);
 			}
 			throw e;
 		}
+	}
+
+	// 에러 메시지 문자열이 아니라 Hibernate가 DB 에러 필드에서 꺼낸 제약 이름을 쓴다 (메시지 형식·로케일과 무관)
+	private static String violatedConstraintName(DataIntegrityViolationException e) {
+		for (Throwable cause = e; cause != null; cause = cause.getCause()) {
+			if (cause instanceof ConstraintViolationException violation) {
+				return violation.getConstraintName();
+			}
+		}
+		return null;
 	}
 
 }
