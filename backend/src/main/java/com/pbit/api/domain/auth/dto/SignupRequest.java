@@ -2,6 +2,7 @@ package com.pbit.api.domain.auth.dto;
 
 import java.util.List;
 
+import com.pbit.api.domain.auth.validation.UniqueTermCodes;
 import com.pbit.api.domain.term.entity.TermCode;
 import com.pbit.api.domain.user.validation.UserRules;
 
@@ -32,8 +33,8 @@ public record SignupRequest(
 	@Pattern(regexp = UserRules.NICKNAME_PATTERN, message = UserRules.NICKNAME_MESSAGE)
 	String nickname,
 
-	@Schema(description = "약관 동의 목록. 빠진 약관은 미동의로 처리한다")
-	@NotNull
+	@Schema(description = "약관 동의 목록. 빠진 약관은 미동의로 처리하고, 같은 termCode가 두 번 오면 거부한다")
+	@NotNull @UniqueTermCodes
 	List<@NotNull @Valid Agreement> agreements
 ) {
 

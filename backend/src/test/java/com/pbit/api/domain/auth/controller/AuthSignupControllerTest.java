@@ -141,6 +141,19 @@ class AuthSignupControllerTest {
 	}
 
 	@Test
+	void 같은_약관_코드가_중복되면_agreements_필드_VALIDATION_ERROR() throws Exception {
+		String body = VALID_BODY.replace("{ \"termCode\": \"MARKETING\", \"agreed\": false }",
+				"{ \"termCode\": \"SERVICE\", \"agreed\": false }");
+
+		signup(body)
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.error.code").value("VALIDATION_ERROR"))
+				.andExpect(jsonPath("$.error.fieldErrors[0].field").value("agreements"))
+				.andExpect(jsonPath("$.error.fieldErrors[0].reason").value("같은 약관이 중복되어 있어요"));
+		verify(signupService, never()).signup(any());
+	}
+
+	@Test
 	void 서비스_에러_코드는_명세의_HTTP_상태로_응답한다() throws Exception {
 		assertServiceError(ErrorCode.PASSWORD_MISMATCH, 400);
 		assertServiceError(ErrorCode.REQUIRED_TERMS_NOT_AGREED, 400);
