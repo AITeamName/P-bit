@@ -23,7 +23,6 @@ export default function LoginPage() {
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (submitting) return
     setSubmitting(true)
     setErrorMessage(null)
     try {
