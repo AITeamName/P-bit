@@ -10,11 +10,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus>('loading')
   const [userId, setUserId] = useState<string | null>(null)
   const [onboardingCompleted, setOnboardingCompleted] = useState(false)
-  // 시작 확인이 끝나기 전에 로그인된 경우를 구분 (늦게 온 실패가 방금 만든 로그인 상태를 지우지 않게 함)
-  const signedIn = useRef(false)
+  // 로그인한 적이 있는지 (시작 확인이 끝나기 전에 로그인하면 늦게 온 실패가 그 로그인 상태를 지우지 않게 함)
+  const signedInOnce = useRef(false)
 
   const signIn = useCallback((session: Session) => {
-    signedIn.current = true
+    signedInOnce.current = true
     api.setAccessToken(session.accessToken)
     setUserId(session.userId)
     setOnboardingCompleted(session.onboardingCompleted)
@@ -22,7 +22,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = useCallback(() => {
-    signedIn.current = false
     api.clearAccessToken()
     setUserId(null)
     setOnboardingCompleted(false)
@@ -47,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setStatus('authenticated')
       } catch (error) {
         // 그 사이 이미 로그인했다면 늦게 온 실패는 무시
-        if (check.cancelled || signedIn.current) return
+        if (check.cancelled || signedInOnce.current) return
         if (error instanceof ApiError && error.status === 401) {
           signOut()
         } else {
