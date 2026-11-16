@@ -67,7 +67,7 @@ flowchart LR
 결정 항목(도메인, 계정·예산, LLM 공급자)이 정해지면 `.github/workflows/deploy.yml`로 추가한다. 설계는 클라우드 기술기획서 V0.3 3.2 기준.
  
 1. `main` 머지 시 Spring·FastAPI Docker 이미지를 빌드해 **ECR**에 올린다. AWS 로그인은 **GitHub OIDC 역할**로 하고 액세스 키를 저장하지 않는다.
-2. 이미지 태그는 **커밋 SHA**로 고정한다. FastAPI 이미지에는 `rubric_version`이 들어가므로 태그로 루브릭 버전을 추적할 수 있다.
+2. 이미지 태그는 **커밋 SHA**로 고정한다. FastAPI 이미지에 포함된 루브릭 YAML은 태그(커밋)로 추적하고, 실제 사용 버전은 `RUBRIC_VERSION`과 응답 `meta.rubric_version`으로 확인한다. 두 값이 다르면 배포하지 않는다.
 3. prod 배포 전 **RDS 수동 스냅샷**을 먼저 만든다.
 4. **SSM Run Command**로 EC2에서 `docker compose pull && docker compose up -d` 실행.
 5. 웹은 빌드 결과를 S3에 올리고 CloudFront 캐시를 무효화한다.
