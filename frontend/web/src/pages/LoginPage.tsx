@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { SubmitEvent } from 'react'
 import { Link as RouterLink, useNavigate } from 'react-router'
-import { api, ApiError, GOOGLE_LOGIN_URL } from '../api'
+import { api, getUserMessage, GOOGLE_LOGIN_URL } from '../api'
 import { Button, Header, TextField } from '../components'
 import { useAuth } from '../stores/authContext.ts'
 import './LoginPage.css'
@@ -33,7 +33,7 @@ export default function LoginPage() {
       // 온보딩을 마친 회원의 이동 경로는 정해지지 않아 이동하지 않는다.
       if (!res.onboardingCompleted) navigate('/onboarding', { replace: true })
     } catch (error) {
-      if (error instanceof ApiError) setErrorMessage(error.userMessage)
+      setErrorMessage(getUserMessage(error))
     } finally {
       setSubmitting(false)
     }
