@@ -14,7 +14,7 @@ type LoginResponse = {
 }
 
 export default function LoginPage() {
-  const { signIn } = useAuth()
+  const { status, signIn } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -23,6 +23,8 @@ export default function LoginPage() {
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
+    // 시작 로그인 확인 중에 로그인하면 늦게 도착한 확인 결과가 새 로그인의 토큰과 쿠키를 덮어쓴다
+    if (status === 'loading') return
     setSubmitting(true)
     setErrorMessage(null)
     try {
@@ -69,7 +71,7 @@ export default function LoginPage() {
           </div>
           <div className="auth-actions">
             <div className="auth-buttons">
-              <Button type="submit" disabled={submitting}>
+              <Button type="submit" disabled={submitting || status === 'loading'}>
                 로그인
               </Button>
               <div className="auth-or">또는</div>
