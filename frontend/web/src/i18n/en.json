@@ -8,5 +8,6 @@
   "login.or": "",
   "login.google": "",
   "login.noAccount": "",
-  "login.signup": ""
+  "login.signup": "",
+  "error.fallback": ""
 }
