@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { api, ApiError, setAuthFailureHandler } from '../api'
 import { AuthContext } from './authContext.ts'
@@ -10,11 +10,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus>('loading')
   const [userId, setUserId] = useState<string | null>(null)
   const [onboardingCompleted, setOnboardingCompleted] = useState(false)
-  // 로그인한 적이 있는지 (시작 확인이 끝나기 전에 로그인하면 늦게 온 실패가 그 로그인 상태를 지우지 않게 함)
-  const signedInOnce = useRef(false)
 
   const signIn = useCallback((session: Session) => {
-    signedInOnce.current = true
     api.setAccessToken(session.accessToken)
     setUserId(session.userId)
     setOnboardingCompleted(session.onboardingCompleted)
@@ -45,8 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setOnboardingCompleted(me.onboardingCompleted === true)
         setStatus('authenticated')
       } catch (error) {
-        // 그 사이 이미 로그인했다면 늦게 온 실패는 무시
-        if (check.cancelled || signedInOnce.current) return
+        if (check.cancelled) return
         if (error instanceof ApiError && error.status === 401) {
           signOut()
         } else {
