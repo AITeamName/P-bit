@@ -12,5 +12,5 @@ export function setAuthFailureHandler(handler: (() => void) | null) {
   authFailureHandler = handler
 }
 
-export { ApiError } from './errors.ts'
+export { ApiError, getUserMessage } from './errors.ts'
 export { GOOGLE_LOGIN_URL } from './config.ts'

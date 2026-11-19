@@ -32,17 +32,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // 새로고침하면 메모리의 토큰이 사라지므로 refresh 쿠키로 다시 로그인 상태를 만든다.
   useEffect(() => {
-    let cancelled = false
+    const check = { cancelled: false }
     ;(async () => {
       try {
         await api.refreshSession()
         const me = await api.get<MeResponse>('/users/me')
-        if (cancelled) return
+        if (check.cancelled) return
         setUserId(me.userId ?? null)
         setOnboardingCompleted(me.onboardingCompleted === true)
         setStatus('authenticated')
       } catch (error) {
-        if (cancelled) return
+        if (check.cancelled) return
         if (error instanceof ApiError && error.status === 401) {
           signOut()
         } else {
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })()
     return () => {
-      cancelled = true
+      check.cancelled = true
     }
   }, [signOut])
 
