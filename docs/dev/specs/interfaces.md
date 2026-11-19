@@ -1,6 +1,6 @@
 # 인터페이스 계약 — Spring Boot ↔ FastAPI
 
-> 담당: 백엔드 · LLM 파트 공동 — 양쪽 승인 후 확정 · 상태: 초안 · 최종 수정: 2026-11-19
+> 담당: 백엔드 · LLM 파트 공동 — 양쪽 승인 후 확정 · 상태: 초안 · 작성일: 2026-11-14 · 최종 수정: 2026-11-19
 > 관련 이슈: KAN-66 · KAN-43
 > 기준 문서: LLM 파트 기술 명세서 v1.0 · 백엔드 기술 기획서 v1.0
 
@@ -456,7 +456,7 @@ flowchart TB
 | --- | --- |
 | 재시도 대상 | LLM 호출의 타임아웃, 5xx, 429만. **4xx는 재시도하지 않는다** |
 | 백오프 | 0.5s → 1.5s, 최대 2회 (`LLM_MAX_RETRY`) |
-| 멱등성 | 같은 `Idempotency-Key`는 60초간 같은 응답을 반환한다. 같은 프롬프트가 두 번 채점돼 로그가 중복되는 것을 막는다. 키는 프론트가 만들고 Spring이 그대로 전달한다 (5.2). 캐시 대상은 아래 제안 B |
+| 멱등성 | 같은 `Idempotency-Key`는 60초간 같은 응답을 반환한다. 같은 프롬프트가 두 번 채점돼 로그가 중복되는 것을 막는다. 키는 프론트가 만들고 Spring이 그대로 전달한다 (5.2). 캐시 대상은 9장 #8(LLM 제안 B) |
 | 로그 | `request_id`(=`X-Request-Id`), `mode`, `domain`, `rubric_version`, `latency_ms`, `retry_count`, `degraded`를 구조화 로그로 남긴다. **`prompt_text`는 AI 서버 로그에 남기지 않는다** |
 | 알림 | `degraded` 비율 5% 초과 또는 `JUDGE_INVALID_JSON` 연속 10건 시 알림 (클라우드 협의) |
 
@@ -470,8 +470,8 @@ flowchart TB
 | --- | --- | --- |
 | Spring → FastAPI 연결 | 3s | AI 서버가 꺼져 있으면 빨리 알아차린다 |
 | Spring → FastAPI 응답 | 35s | Nginx(30s)보다 길게 잡아 중간 절단을 피한다 |
-| Nginx → FastAPI | 30s | LLM 명세 1.4 |
-| FastAPI → LLM | 12s(판정) · 20s(답변) | LLM 명세 1.4 |
+| Nginx → FastAPI | 30s | 1.1 · 1.4 |
+| FastAPI → LLM | 12s(판정) · 20s(답변) | 1.4 |
 - 응답 타임아웃은 **모든 엔드포인트 35s로 통일**한다.
 - 이유: 서버 다운은 연결 타임아웃(3s)에서 잡힌다. 35s를 다 기다리는 건 “접속은 됐는데 멈춘” 경우뿐이다. 엔드포인트별로 나누면 AI 쪽이 기능을 바꿀 때(예: `/v1/practice/blank` LLM 호출 0~1회) 정상 요청이 잘릴 위험이 더 크다.
 - 재검토: 특정 API의 지연이 문제가 되면 그 API만 따로 설정한다.
@@ -510,7 +510,7 @@ FastAPI는 LLM 호출을 내부에서 이미 재시도한다 (최대 2회, 0.5s 
 
 | 헤더 | 만드는 곳 | 규칙 |
 | --- | --- | --- |
-| `X-Internal-Token` | 환경변수 (Spring `AI_INTERNAL_TOKEN` = FastAPI `INTERNAL_TOKEN`) | 모든 요청에 포함. 불일치 시 FastAPI는 401 |
+| `X-Internal-Token` | 환경변수 `AI_INTERNAL_TOKEN` (Spring·FastAPI 같은 이름·같은 값, 생성·보관: 클라우드 — `docs/ops/env.md` 1·2절) | 모든 요청에 포함. 불일치 시 FastAPI는 401 |
 | `X-Request-Id` | Spring (`RequestIdFilter`, UUID) | 클라이언트 요청 1건의 ID를 FastAPI까지 그대로 전파. FastAPI는 로그와 응답 `meta.request_id`에 기록. **요청 추적값의 기준은 헤더다** |
 | `Idempotency-Key` | 프론트 (UUID) | Spring은 받은 키를 그대로 전달한다. 새로 만들지 않는다 |
 - 헤더를 기준으로 하는 이유: 본문을 해석하기 전에 읽을 수 있어, 본문이 깨진 요청(400)도 로그에 ID가 남는다. 같은 값을 본문에 다시 두면 값이 어긋났을 때 기준이 애매해진다 (논의 사항 1).
@@ -524,7 +524,7 @@ FastAPI는 LLM 호출을 내부에서 이미 재시도한다 (최대 2회, 0.5s 
 Spring ── 60초 안에 같은 키가 있었으면 저장된 응답 반환 (FastAPI 호출 없음)
   │  처음 본 키면 그대로 전달
   ▼  Idempotency-Key: abc-123   (Spring 재시도도 같은 키)
-FastAPI ── 60초 안에 같은 키면 같은 응답 반환 (LLM 명세 5.4)
+FastAPI ── 60초 안에 같은 키면 같은 응답 반환 (3.11)
 ```
 
 | 담당 | 규칙 |
@@ -539,9 +539,9 @@ FastAPI ── 60초 안에 같은 키면 같은 응답 반환 (LLM 명세 5.4)
 
 ### 6.1 에러 필드 전달
 
-- FastAPI 에러의 `user_message`는 프론트에 `userMessage`로 그대로 전달한다. 화면에 바로 띄워도 되는 문구다 (LLM 명세 5.2).
+- FastAPI 에러의 `user_message`는 프론트에 `userMessage`로 그대로 전달한다. 화면에 바로 띄워도 되는 문구다 (3.10).
 - FastAPI 에러의 `message`는 프론트에 내보내지 않고 Spring 로그에만 남긴다. Spring 에러 응답에는 `message` 필드가 없다 (API 명세서 에러 응답 참고).
-- `fallback`(충족률·레벨)은 표기만 바꿔 그대로 전달한다.
+- `fallback`(모호표현·글자 수)은 표기만 바꿔 그대로 전달한다. 요소 판정이 실패한 응답이라 레벨·충족률은 담기지 않는다 (3.10, `docs/dev/llm/model-design.md` 1.10).
 
 ### 6.2 FastAPI → Spring 에러 코드 대응
 
@@ -585,7 +585,7 @@ FastAPI ── 60초 안에 같은 키면 같은 응답 반환 (LLM 명세 5.4)
 | 작성 주체 | `system_assembled` · `user_rewritten` · `assembly_failed` | 대문자 |
 | 드릴다운 입력 | `choice` · `free_text` | 대문자 |
 - 같은 `beginner`라도 자가 레벨은 `BEGINNER`, 측정 레벨은 `LV1`으로 필드에 따라 다르게 바뀐다. 측정 레벨은 대문자 변환이 아니라 대응표로 바꾼다.
-- 알 수 없는 값이 오면 기본값으로 바꾸지 않고 오류로 처리한다 (LLM 명세 4.5와 동일).
+- 알 수 없는 값이 오면 기본값으로 바꾸지 않고 오류로 처리한다 (3.8과 동일).
 
 ### 7.3 기타 공통 규칙
 
@@ -615,16 +615,21 @@ FastAPI ── 60초 안에 같은 키면 같은 응답 반환 (LLM 명세 5.4)
 | 1 | 요청 본문의 `request_id`를 빼고 `X-Request-Id` 헤더만 쓰기 (응답 `meta.request_id`는 유지) | 조하린 | 확인 필요 |
 | 2 | 측정 레벨 값이 `beginner` · `intermediate` · `advanced` 세 개뿐인지. 맞으면 `LV1` · `LV2` · `LV3`에 대응 | 조하린 | 확인 필요 |
 | 3 | 첫 요청이 처리 중일 때 같은 `Idempotency-Key`가 오면 기다렸다 같은 결과를 주는지, 새로 처리하는지 | 조하린 | 확인 필요 |
-| 4 | 내부 토큰 생성·보관 담당. 변수 이름이 Spring `AI_INTERNAL_TOKEN`, FastAPI `INTERNAL_TOKEN`으로 다르고 값은 같아야 한다 | 조하린, @김성민(클라우드 9회차) | 확인 필요 |
+| 4 | 내부 토큰 생성·보관 담당. 변수 이름이 Spring `AI_INTERNAL_TOKEN`, FastAPI `INTERNAL_TOKEN`으로 다르고 값은 같아야 한다 | 조하린, @김성민(클라우드 9회차) | **확정** — 양쪽 모두 `AI_INTERNAL_TOKEN`, 생성·보관 클라우드 (5.1, `env.md` 1·2절) |
 | 5 | 재시도 버튼은 같은 키, 프롬프트 수정 후 재제출은 새 키 | @전바울 프론트엔드 9회차 | 확인 필요 |
 | 6 | `Retry-After`가 짧을 때(예: 3초 이하) Spring이 1회 자동 재시도할지 | 김현재 | 보류 (429 로그 확인 후) |
+| 7 | **(LLM 제안 A) 요청 단위 시간 예산.** LLM 재시도를 포함하면 Nginx 30s를 넘는다 (1.4). FastAPI가 요청 기한을 두고 초과 시 재시도를 멈추고 `degraded`로 응답하는 안 (4.1, 1.4) | 김현재, 조하린 | 제안 |
+| 8 | **(LLM 제안 B) 멱등성 캐시 대상 + 재시도 키.** 실패 응답을 캐시하면 같은 키로 재시도해도 60초 동안 같은 실패만 받는다. **정상 200만 캐시하고 4xx·5xx·`degraded`는 캐시하지 않는 안** — Spring 캐시도 같은 규칙 필요. 현재 웹 클라이언트(`frontend/web/src/api/client.ts`)는 호출마다 새 키를 만들어, #5(재시도 버튼은 같은 키)를 유지하려면 호출하는 쪽이 키를 넘길 수 있는 옵션이 필요하다 (5.2, 4.2) | 김현재, @전바울 | 제안 |
+| 9 | **(LLM 제안 C) Uvicorn 워커 2개와 메모리 캐시.** 워커마다 캐시가 따로라 중복을 못 막는다. 워커 1개 또는 공유 저장소 (5.2, `architecture.md` 2.6) | 조하린, @김성민 | 제안 |
+| 10 | **(LLM 제안 D) Nginx가 직접 내는 응답의 대응.** Nginx 504(30s 절단)·413(1MB 초과)는 FastAPI `error` 봉투가 없다. 6.2 대응표에 추가 필요 (예: 둘 다 `AI_UNAVAILABLE`/`INTERNAL_ERROR`) | 김현재, @김성민 | 제안 |
+| 11 | **(LLM 제안 E) `/health`·`/ready` 인증.** 헬스체크는 토큰 없이 허용할지 (3.2) | 조하린, @김성민 | 제안 |
 
 ---
 
 ## 10. 범위 밖
 
-- `domain=etc` 처리: 팀 미결정 (백엔드 기획서 11장 #4, LLM 명세 미결정 #6). 확정되면 6.2의 `UNSUPPORTED_DOMAIN` 대응을 채운다.
-- Before/After 답변 SSE 스트리밍: LLM 명세 2.3 미결정. 현재는 단일 응답.
+- `domain=etc` 처리: 팀 미결정 (백엔드 기획서 11장 #4, `docs/dev/llm/system-design.md` 7장 #6). 확정되면 6.2의 `UNSUPPORTED_DOMAIN` 대응을 채운다.
+- Before/After 답변 SSE 스트리밍: `docs/dev/llm/system-design.md` 4.2 · 7장 #13 미결정. 현재는 단일 응답.
 
 ---
 
@@ -634,3 +639,4 @@ FastAPI ── 60초 안에 같은 키면 같은 응답 반환 (LLM 명세 5.4)
 | --- | --- | --- |
 | 2026년 11월 14일 | BE 초안 작성 (4–10장) | 김현재 |
 | 2026-11-19 | LLM 작성분(1–3장) 반영, Notion 초안을 저장소로 이관 | LLM |
+| 2026-11-19 | 4–10장 "LLM 명세 x.x" 참조를 문서 안 절 번호로 변경, 내부 토큰 `AI_INTERNAL_TOKEN` 통일(9장 #4 확정), `fallback` 구성 수정, LLM 제안 A–E를 9장 #7–11로 병합 | LLM |
