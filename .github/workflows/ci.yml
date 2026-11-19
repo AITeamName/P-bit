@@ -79,8 +79,7 @@ jobs:
       DB_URL: jdbc:postgresql://localhost:5432/pbit   # DB_URL을 주면 DB_NAME은 필요 없음
       DB_USERNAME: pbit
       DB_PASSWORD: pbit
-      # TODO(KAN-34 머지 후): JWT 코드가 들어오면 아래 줄 주석 해제
-      # JWT_SECRET: ci-only-dummy-secret-at-least-32-characters-long
+      JWT_SECRET: ci-only-dummy-secret-at-least-32-characters-long
 
     steps:
       - uses: actions/checkout@v4
