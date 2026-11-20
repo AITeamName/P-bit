@@ -1,6 +1,6 @@
 # LLM 파트 스택·선택 근거
 
-> 담당: LLM(조하린) · 최종 수정: 2026-11-19
+> 담당: LLM · 최종 수정: 2026-11-19
 > 출처: AI 파트 기술 명세서 v1.0 1.1 · `docs/dev/specs/architecture.md` 2절 · `docs/ops/env.md` 2절
 
 AI 서버(`ai-server/`)를 무엇으로 만들고 왜 그렇게 골랐는지만 적는다.
