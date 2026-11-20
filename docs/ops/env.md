@@ -23,7 +23,7 @@
 | `DB_URL` | 📝 | ✅ | JDBC 주소 | `jdbc:postgresql://localhost:5432/pbit` |
 | `DB_USERNAME` | 📝 | ✅ | DB 사용자 | `pbit` |
 | `DB_PASSWORD` | 🔑 | ✅ | DB 비밀번호 | (로컬 전용 값) |
-| `JWT_SECRET` | 🔑 | ✅ (KAN-34 이후) | JWT 서명 키, 32자 이상 | — |
+| `JWT_SECRET` | 🔑 | ✅ | JWT 서명 키, 32자 이상 | — |
 | `JWT_ACCESS_TTL` | 📝 | | Access 토큰 유효기간 | `PT30M` |
 | `JWT_REFRESH_TTL` | 📝 | | Refresh 토큰 유효기간 | `P14D` |
 | `GOOGLE_CLIENT_ID` | 📝 | ✅ (Google 로그인) | Google OAuth 클라이언트 ID | — |
