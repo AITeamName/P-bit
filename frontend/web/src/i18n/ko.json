@@ -8,5 +8,6 @@
   "login.or": "또는",
   "login.google": "Google로 계속",
   "login.noAccount": "계정이 없으신가요?",
-  "login.signup": "회원가입"
+  "login.signup": "회원가입",
+  "error.fallback": "잠시 후 다시 시도해주세요."
 }

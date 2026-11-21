@@ -10,9 +10,14 @@ export const DEFAULT_LOCALE: Locale = 'ko'
 // 문구에서 줄바꿈 자리를 나타내는 표시
 const BREAK = '{br}'
 
+// 비어 있는 문구의 키 목록
+export function emptyKeys(messages: Record<string, string>): string[] {
+  return Object.keys(messages).filter((key) => messages[key] === '')
+}
+
 // 문구가 모두 채워진 언어인지 (비어 있는 문구가 하나라도 있으면 번역 준비 안 됨)
 export function isComplete(messages: Record<string, string>): boolean {
-  return Object.values(messages).every((text) => text !== '')
+  return emptyKeys(messages).length === 0
 }
 
 // 브라우저 언어 목록(우선순위 순)에서 쓸 언어 선택
