@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pbit.api.domain.auth.dto.SignupRequest;
+import com.pbit.api.domain.auth.dto.request.SignupRequest;
 import com.pbit.api.domain.auth.entity.ClientType;
 import com.pbit.api.domain.term.entity.Term;
 import com.pbit.api.domain.term.entity.TermCode;

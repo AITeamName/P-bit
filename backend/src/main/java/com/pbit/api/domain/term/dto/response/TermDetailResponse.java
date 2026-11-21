@@ -1,4 +1,4 @@
-package com.pbit.api.domain.term.dto;
+package com.pbit.api.domain.term.dto.response;
 
 import java.time.Instant;
 

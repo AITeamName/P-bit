@@ -22,8 +22,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import com.pbit.api.domain.auth.dto.SignupRequest;
-import com.pbit.api.domain.auth.dto.SignupRequest.Agreement;
+import com.pbit.api.domain.auth.dto.request.SignupRequest;
+import com.pbit.api.domain.auth.dto.request.SignupRequest.Agreement;
 import com.pbit.api.domain.term.entity.TermCode;
 import com.pbit.api.domain.user.repository.UserRepository;
 import com.pbit.api.global.auth.AuthUser;

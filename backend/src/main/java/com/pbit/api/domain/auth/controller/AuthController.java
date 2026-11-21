@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pbit.api.domain.auth.dto.AvailabilityResponse;
-import com.pbit.api.domain.auth.dto.SignupRequest;
-import com.pbit.api.domain.auth.dto.SignupResponse;
+import com.pbit.api.domain.auth.dto.response.AvailabilityResponse;
+import com.pbit.api.domain.auth.dto.request.SignupRequest;
+import com.pbit.api.domain.auth.dto.response.SignupResponse;
 import com.pbit.api.domain.auth.service.SignupResult;
 import com.pbit.api.domain.auth.service.SignupService;
 import com.pbit.api.domain.user.validation.UserRules;

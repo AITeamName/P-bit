@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.pbit.api.domain.auth.dto.SignupRequest.Agreement;
+import com.pbit.api.domain.auth.dto.request.SignupRequest.Agreement;
 import com.pbit.api.domain.term.entity.TermCode;
 
 import jakarta.validation.ConstraintValidator;
