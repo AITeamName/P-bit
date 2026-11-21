@@ -413,6 +413,8 @@ erDiagram
 
 ## 8. DDL (Flyway `V1__init.sql`)
 
+> 초기 스키마(`V1__init.sql`)만 원문대로 싣는다. `V2` 이후 변경은 DDL을 옮기지 않고 `backend/src/main/resources/db/migration/`의 마이그레이션 파일을 기준으로 본다.
+
 ```sql
 CREATE TABLE users (
   id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
