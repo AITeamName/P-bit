@@ -1,6 +1,6 @@
 # 문서 안내 — `docs/`
 
-> 담당: 팀 공통 · 최종 수정: 2026-11-20
+> 담당: 팀 공통 · 최종 수정: 2026-11-21
 
 ---
 
@@ -8,10 +8,9 @@
 
 | 디렉터리 | 담는 것 |
 | --- | --- |
-| `planning/` | 기획 — 제품 요구사항 |
+| `planning/` | 기획 — MVP 범위와 완료 기준. PRD 원문은 Notion에 둔다 |
 | `dev/specs/` | **파트 사이의 계약** — 아키텍처, LLM ↔ 백엔드 인터페이스, API, ERD. 바꾸면 다른 파트가 깨지는 문서 |
 | `dev/llm/` | LLM 파트 설계 — 스택, 채점 엔진 구조, 레벨·지표·루브릭 |
-| `dev/design/` | 파트별 기술 기획서 원본. 내용은 `specs/`·`llm/`·`ops/`로 옮기는 중 |
 | `dev/ai/` | AI 협업 도구(Claude Code 등) 워크플로 프롬프트 |
 | `ops/` | 운영 — 배포 절차, 환경변수 |
 | `adr/` | 되돌리기 어려운 결정의 기록 (Architecture Decision Record) |
@@ -26,17 +25,14 @@
 
 | 문서 | 다루는 것 | 담당 | 상태 |
 | --- | --- | --- | --- |
-| `planning/prd.md` | 제품 요구사항 | 팀 | 뼈대 |
+| `planning/mvp.md` | MVP 목표·우선순위·기능별 완료 기준·데모 시나리오·파트별 산출물 | PM | 작성됨 |
 | `dev/specs/architecture.md` | 전체 서비스·인프라 구성, 백엔드 아키텍처 | 클라우드 · 백엔드 | 작성됨 |
 | `dev/specs/interfaces.md` | Spring Boot ↔ FastAPI 계약 — 엔드포인트·스키마·에러·타임아웃·멱등성·표기 변환 | 백엔드 · LLM 공동 | 초안 |
 | `dev/specs/api.md` | 클라이언트 ↔ Spring Boot API (`/api/v1`) | 백엔드 | 뼈대 |
-| `dev/specs/erd.md` | DB 테이블·관계·설계 의도 | 백엔드 | 뼈대 |
+| `dev/specs/erd.md` | DB 테이블·관계·설계 의도·모드별 적재 규칙 | 백엔드 | 초안 |
 | `dev/llm/llm-tech-spec.md` | AI 서버 스택과 선택 근거 | LLM | 작성됨 |
 | `dev/llm/system-design.md` | 서비스 정의·6요소·3모드·엔진 구성·LLM 호출 수·로그 필드 | LLM | 작성됨 |
 | `dev/llm/model-design.md` | 레벨·지표 계산, 루브릭, 문장 템플릿, 모호표현, 조립 제약, 신뢰도 검증 | LLM | 작성됨 |
-| `dev/design/backend-tech-spec.md` | 백엔드 기술 기획서 원본 | 백엔드 | 뼈대 |
-| `dev/design/frontend-tech-spec.md` | 프론트엔드 기술 기획서 원본 | 프론트 | 뼈대 |
-| `dev/design/cloud-tech-spec.md` | 클라우드 기술 기획서 원본 | 클라우드 | 뼈대 |
 | `dev/ai/prompts/` | AI 협업 워크플로 프롬프트 | LLM | 비어 있음 |
 | `ops/deploy.md` | CI/CD 파이프라인과 롤백 절차 | 클라우드 | 작성됨 |
 | `ops/env.md` | 서비스별 `.env` 키, GitHub Secrets | 클라우드 (2절 AI 서버: LLM) | 작성됨 |
@@ -49,11 +45,13 @@
 
 | 궁금한 것 | 문서 |
 | --- | --- |
+| MVP에 무엇이 들어가나, 기능별 완료 기준 | `planning/mvp.md` 2–3장 |
 | AI 서버 엔드포인트, 요청·응답 JSON, 에러 코드 | `dev/specs/interfaces.md` 3장 |
 | Spring이 AI 서버를 부를 때 타임아웃·재시도·헤더 | `dev/specs/interfaces.md` 4–5장 |
 | `snake_case` ↔ `camelCase`, 열거형 대소문자 변환 | `dev/specs/interfaces.md` 7장 |
 | 레벨이 어떻게 정해지나, 세분화율은 무엇인가 | `dev/llm/model-design.md` 1–2장 |
 | 6요소가 무엇이고 어떻게 판정하나 | `dev/llm/system-design.md` 1.3 · `dev/llm/model-design.md` 3–4장 |
+| DB 테이블·관계, 모드별 적재 규칙 | `dev/specs/erd.md` |
 | DB 컬럼 | `backend/src/main/resources/db/migration/` (Flyway) |
 | 서버·네트워크 구성 | `dev/specs/architecture.md` |
 | 환경변수 키 이름 | `ops/env.md` |
