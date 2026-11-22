@@ -103,8 +103,8 @@ export default function LoginPage() {
           </div>
           <div className="auth-actions">
             <div className="auth-buttons">
-              {/* type="submit": 누르면 위 form의 handleSubmit 실행, 요청 중이거나 시작 확인 중에는 누를 수 없음 */}
-              <Button type="submit" disabled={submitting || status === 'loading'}>
+              {/* type="submit": 누르면 위 form의 handleSubmit 실행, 요청 중이거나 시작 확인 중에는 스피너를 보여 주고 누를 수 없음 */}
+              <Button type="submit" loading={submitting || status === 'loading'}>
                 <Text id="login.submit" />
               </Button>
               <div className="auth-or">
