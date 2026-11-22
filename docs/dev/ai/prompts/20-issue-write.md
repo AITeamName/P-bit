@@ -70,4 +70,4 @@ Save the body to the file, and show only the summary above in the chat.
 | --- | --- | --- |
 | Reading an existing issue | Reads it through Jira MCP | The user pastes it |
 | Draft | Saved as a file under `.claude/drafts/` | Output as a Markdown code block |
-| Registration | After approval, creates or updates it through Jira MCP and gives the key. Converts to ADF when there are checkboxes (creation shows an approval prompt before it runs) | The user pastes it into Jira and turns checkboxes into checklist items in the editor (`[]` + space). If the Atlassian connector is connected, registers it after approval |
+| Registration | After approval, creates or updates it through Jira MCP and gives the key. Converts to ADF when there are checkboxes (creating or updating shows an approval prompt before it runs) | The user pastes it into Jira and turns checkboxes into checklist items in the editor (`[]` + space). If the Atlassian connector is connected, registers it after approval |

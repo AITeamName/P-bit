@@ -29,9 +29,10 @@ Approval comes in two forms.
 | Merge a PR (`gh pr merge`) — normally done by a person | Yes | Yes |
 | Write through `gh api` (`-X POST`, `PATCH`, `PUT`, `DELETE`) | Yes | Yes |
 | Create a Jira issue | Yes | Yes |
+| Update a Jira issue, change its status, or comment on it | Yes | Yes |
 | Commit (each commit) | Yes | No |
-| Update a Jira issue or change its status, edit a PR body | Yes | No |
-| Post a comment or review on Jira or GitHub — normally posted by a person | Yes | No |
+| Edit a PR body | Yes | No |
+| Post a comment or review on GitHub — normally posted by a person | Yes | No |
 | Create or switch a branch, change files outside the plan | Yes | No |
 | Read (status, log, diff, viewing issues and PRs) | No | No |
 
