@@ -1,6 +1,6 @@
 # 배포 절차 — CI/CD 파이프라인과 롤백
  
-> 담당: 클라우드(김성민) · 최종 수정: 2026-11-15
+> 담당: 클라우드(INFRA) · 최종 수정: 2026-11-15
 > 인프라 구성은 `docs/dev/specs/architecture.md`, 환경변수는 `docs/ops/env.md` 참고.
  
 | 단계 | 상태 |
@@ -37,7 +37,6 @@ flowchart LR
  
 **추가 예정**
 - `ai-server/`, `frontend/extension/` 코드가 생기면 job 추가 (`ci.yml` 안 주석 참고)
-- KAN-34(JWT) 머지 후 `JWT_SECRET` 더미 값 주석 해제
 - `actions/*` 버전 업그레이드 (Node 20 지원 종료 경고 대응)
 - 주의: `discord-notification.yml`이 워크플로 이름 `CI`에 의존하므로 `name: CI`를 바꾸지 않는다.
  
