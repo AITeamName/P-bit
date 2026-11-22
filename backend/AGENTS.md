@@ -36,11 +36,14 @@ com.pbit.api
 │   └─ logging/        RequestIdFilter
 ├─ domain/{feature}/  per feature (auth · user · term · session · event · record · dashboard)
 │   ├─ controller/  service/  repository/  entity/
+│   ├─ validation/     custom Bean Validation constraints and validators
 │   └─ dto/            request/ · response/
 └─ infra/ai/          FastAPI calls (AiClient, AI DTOs) — create here when needed
 ```
 
 - New features follow the same shape. Do not create empty folders.
+- Put non-DTO result records returned by a service (for example, `SignupResult`, `IssuedRefreshToken`) in `service/`.
+- Splitting the existing flat `auth/dto` into `request/` and `response/` is planned in KAN-69. Until then, keep new DTOs consistent with the folder you are working in.
 - Put code in `global/` only when several features use it. Code used by one feature stays in that feature.
 - To use another feature's data, call that feature's Service. Do not use another feature's Repository directly.
 
