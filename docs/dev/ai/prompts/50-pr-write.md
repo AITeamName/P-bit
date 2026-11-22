@@ -24,7 +24,9 @@ Write a PR body from the actual changes and the checks actually run only, and re
     - If a sentence gets long, split it into sub-bullets.
 4. In the test section, check only what appears under 실행한 명령 in `40-review`, and give the commands and results in the summary.
 5. In the self-checklist, check only items that passed in `40-review`, and add `(해당 없음)` at the end of items that do not apply.
-6. If files owned by another part changed, write the target, reason, and confirmation request in `💬 리뷰어에게`. If you do not know the owner's GitHub account, leave it empty and ask the user.
+6. If files owned by another part changed, write the target, reason, and confirmation request in `💬 리뷰어에게`.
+    - Write the reviewer as a part name (for example, 백엔드), not a GitHub `@account`. A mention notifies people as soon as the PR is created, even as a Draft.
+    - Before registering, ask the user whether to replace the part names with `@accounts`. Replace them only when the user says so, using `.github/CODEOWNERS` as candidates and confirming each account.
 7. For a Stack PR, write the preceding PR and the plan to change the base after it merges in `💬 리뷰어에게`.
 8. Save the body to `.claude/drafts/KAN-<number>-pr.md` and give the path.
 9. When the user has reviewed or edited the file and says to register, register a Draft PR.
@@ -43,7 +45,7 @@ Write a PR body from the actual changes and the checks actually run only, and re
 
 ### 본문 밖
 - 비워 둔 값과 질문:
-- 리뷰어 후보: (CODEOWNERS 기준, 모르면 질문)
+- 확인할 파트: (파트명) — `@계정`으로 바꿀까요? (CODEOWNERS 후보: )
 ```
 
 Save the body to the file, and show only the summary above in the chat.
