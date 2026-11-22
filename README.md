@@ -164,7 +164,7 @@ scope는 변경한 파일의 **담당 파트**입니다. 파트 소유 문서도
 | `fe` | `frontend/` 공통 |
 | `infra` | `docker-compose.yml`, `.github/workflows/`, `docs/ops/` |
 | `de` | `docs/brand/` |
-| `ai` | 루트 `CLAUDE.md`, `.claude/`, `.mcp.json`, `docs/dev/ai/` |
+| `ai` | 루트 `AGENTS.md`·`CLAUDE.md`, `.claude/settings.json`, `.mcp.json`, `docs/dev/ai/` |
 | `repo` | `.gitignore`, 루트 `.env.example`, `.github/CODEOWNERS`, PR 템플릿 |
 | `docs` | `README.md`, `CONTRIBUTING.md`, `docs/planning/`, `docs/dev/specs/`, `docs/adr/` |
 

@@ -1,6 +1,6 @@
 # 문서 안내 — `docs/`
 
-> 담당: 팀 공통 · 최종 수정: 2026-11-21
+> 담당: 팀 공통 · 최종 수정: 2026-11-22
 
 ---
 
@@ -11,7 +11,7 @@
 | `planning/` | 기획 — MVP 범위와 완료 기준. PRD 원문은 Notion에 둔다 |
 | `dev/specs/` | **파트 사이의 계약** — 아키텍처, LLM ↔ 백엔드 인터페이스, API, ERD. 바꾸면 다른 파트가 깨지는 문서 |
 | `dev/llm/` | LLM 파트 설계 — 스택, 채점 엔진 구조, 레벨·지표·루브릭 |
-| `dev/ai/` | AI 협업 도구(Claude Code 등) 워크플로 프롬프트 |
+| `dev/ai/` | AI 협업 도구 — 사용 가이드, 단계별 프롬프트, 리뷰 체크리스트, Jira 이슈 양식 |
 | `ops/` | 운영 — 배포 절차, 환경변수 |
 | `adr/` | 되돌리기 어려운 결정의 기록 (Architecture Decision Record) |
 | `brand/` | 브랜딩·카피 가이드 |
@@ -33,7 +33,10 @@
 | `dev/llm/llm-tech-spec.md` | AI 서버 스택과 선택 근거 | LLM | 작성됨 |
 | `dev/llm/system-design.md` | 서비스 정의·6요소·3모드·엔진 구성·LLM 호출 수·로그 필드 | LLM | 작성됨 |
 | `dev/llm/model-design.md` | 레벨·지표 계산, 루브릭, 문장 템플릿, 모호표현, 조립 제약, 신뢰도 검증 | LLM | 작성됨 |
-| `dev/ai/prompts/` | AI 협업 워크플로 프롬프트 | LLM | 비어 있음 |
+| `dev/ai/README.md` | AI 협업 가이드 — 파일 구조, 단계별 프롬프트 사용법, MCP·CLI 연결, 웹 채팅 | AI 협업 도구 | 작성됨 |
+| `dev/ai/prompts/` | 단계별 프롬프트 7종 (`00`~`60`) | AI 협업 도구 | 작성됨 |
+| `dev/ai/review-checklist.md` | 리뷰 기준 — 공통 + 파트별 | AI 협업 도구 (파트별 섹션: 각 파트) | 작성됨 |
+| `dev/ai/jira-guide.md` | Jira 이슈 제목·필드 규칙, 유형별 양식, 상태 흐름 | AI 협업 도구 | 작성됨 |
 | `ops/deploy.md` | CI/CD 파이프라인과 롤백 절차 | 클라우드 | 작성됨 |
 | `ops/env.md` | 서비스별 `.env` 키, GitHub Secrets | 클라우드 (2절 AI 서버: LLM) | 작성됨 |
 | `adr/0000-template.md` | ADR 작성 양식 | 팀 | 템플릿 |
@@ -56,6 +59,9 @@
 | 서버·네트워크 구성 | `dev/specs/architecture.md` |
 | 환경변수 키 이름 | `ops/env.md` |
 | 배포·롤백 | `ops/deploy.md` |
+| AI 도구로 작업하는 단계와 프롬프트, Jira·GitHub MCP 연결 | `dev/ai/README.md` |
+| Jira 이슈 양식, 상태별 옮기는 시점 | `dev/ai/jira-guide.md` |
+| 리뷰할 때 무엇을 확인하나 | `dev/ai/review-checklist.md` |
 
 ---
 
