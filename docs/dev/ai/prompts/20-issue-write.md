@@ -21,12 +21,14 @@ Write a Jira issue body from the settled scope, and register it, or update an ex
     - For an update, read the current title and body, and report every difference from the plan (title, missing items, leftover placeholders).
     - Do not assume the body is correct just because it exists.
 2. **Choose the type.** Choose the template in `jira-guide.md` that fits the kind of work.
-    - For a subtask (Subtask), confirm the parent issue key first. Check that the parent issue actually exists.
+    - Use Story or Task. Do not create a subtask (Subtask) unless the user explicitly asks for one (`jira-guide.md` > `4. 하위 작업 (Subtask)`).
+    - When updating an existing subtask, confirm its parent issue key and check that the parent issue exists.
 3. **Write the body.**
     - Write only the settled scope. Do not write implementation choices that are not decided.
     - Put reference document locations and prerequisite issues in the reference and dependency fields.
     - Leave values not in the inputs (due date, assignee, issue keys) empty, and list them as questions outside the body.
     - Do not copy template example sentences as facts. Remove guide comments and placeholders.
+    - Write lists as plain bullets (`-`). Markdown checkboxes (`- [ ]`) stay as `[ ]` text in Jira.
 4. **Save it as a draft file.** `.claude/drafts/KAN-<number>-issue.md` (for a new issue with no key yet, `KAN-new-<summary>-issue.md`). Give the path.
     - For an update, show only the changed parts as a comparison. If the description was empty, show the whole body.
 5. **Wait for approval.** When the user has reviewed or edited the file and says to register, register or update it with the file content as it is.
@@ -37,7 +39,7 @@ Write a Jira issue body from the settled scope, and register it, or update an ex
 ```markdown
 ### 이슈 초안 — 파일: .claude/drafts/KAN-<번호>-issue.md
 - 신규 / 수정:
-- 유형: (Subtask면 상위 이슈)
+- 유형: Story / Task (기존 Subtask 수정이면 상위 이슈)
 - 제목:
 
 ### 본문 밖
@@ -57,7 +59,7 @@ Save the body to the file, and show only the summary above in the chat.
 ## Human gate
 
 - Review the draft file, fill the empty values, and approve registration.
-- After registration, check the assignee, labels, and epic or parent issue.
+- After registration, check the assignee, labels, and epic.
 - If there are related parts, add their owners as watchers.
 
 ## Tool differences

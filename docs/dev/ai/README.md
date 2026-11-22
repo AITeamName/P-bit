@@ -77,7 +77,7 @@ AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 �
 | --- | --- | --- |
 | 세션 시작 | `00-session-start.md` | `KAN-번호` |
 | 계획 | `10-plan.md` | (00 결과 다음이면 없음) |
-| 이슈 작성 | `20-issue-write.md` | 신규 / `KAN-번호` 수정, 하위 작업이면 상위 이슈 |
+| 이슈 작성 | `20-issue-write.md` | 신규 / `KAN-번호` 수정 |
 | 구현 | `30-implement.md` | "구현해줘", 커밋 번호 |
 | 리뷰 | `40-review.md` | "자체 리뷰" / `PR #번호` 리뷰, 볼 파일·범위 |
 | PR 작성 | `50-pr-write.md` | `KAN-번호` |

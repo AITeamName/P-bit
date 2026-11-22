@@ -7,6 +7,8 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 
 - 사람이 Jira 화면에서 직접 쓸 때와 AI가 쓸 때(`docs/dev/ai/prompts/20-issue-write.md`) 같은 양식을 쓴다.
 - 각 양식 위의 HTML 주석은 AI 작성 안내다. 이슈에 붙여 넣을 때는 지운다.
+- 설명란의 목록은 글머리(`-`)로 쓴다. 마크다운 체크박스(`- [ ]`)는 Jira에서 체크박스가 아니라 `[ ]` 글자로 남는다. 완료 여부는 이슈 상태와 연결된 PR로 본다.
+- 하위 작업(Subtask)은 가능하면 만들지 않는다 (§4).
 
 ---
 
@@ -42,7 +44,7 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 | --- | --- |
 | 담당자 | 1명 |
 | 라벨 | 파트명(`BE` `FE` …) + 기능(`인증` `온보딩` `진단` `점검` `연습` `대시보드`) |
-| 에픽 / 상위 이슈 | 큰 기능 묶음은 에픽(세팅 / 인증 / 온보딩 / 진단 / 점검 / 연습 / 대시보드 / 배포). 상위 이슈 아래 작업이면 하위 작업(Subtask)으로 만든다 |
+| 에픽 | 큰 기능 묶음(세팅 / 인증 / 온보딩 / 진단 / 점검 / 연습 / 대시보드 / 배포). 작업은 에픽 아래 Story·Task로 만들고, 하위 작업(Subtask)은 가능하면 만들지 않는다 (§4) |
 | 크기 | 하루 안에 못 끝내면 나눈다 |
 | 브랜치 | `{type}/KAN-{번호}-{설명}` → 예) `feat/KAN-12-signup-api` (`CONTRIBUTING.md` > `1.2 브랜치 네이밍`) |
 | 커밋·PR | 커밋: `feat(be): 회원가입 API 구현 (KAN-12)` / PR: `[KAN-12] feat(be): 회원가입 API 구현` |
@@ -82,13 +84,13 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 왜 하는지 1~2줄
 
 ## 작업 내용
-- [ ] 
-- [ ] 
+- 
+- 
 
 ## 완료 조건 (DoD)
-- [ ] 동작 확인 방법
-- [ ] 테스트 / Swagger 반영
-- [ ] PR 머지
+- 동작 확인 방법
+- 테스트 / Swagger 반영
+- PR 머지
 
 ## 참고
 - 기획서: (Notion 링크 + 섹션 번호)
@@ -112,13 +114,13 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 - 제목: `[BE] 회원가입 API 구현`
 - 목적: 웹 자체 회원가입 기능을 제공해 사용자가 서비스에 직접 가입할 수 있도록 한다 (WEB-JOIN-01/02)
 - 작업 내용
-    - [ ] `POST /api/v1/auth/signup` 구현
-    - [ ] 이메일·닉네임 중복 확인 API
-    - [ ] 약관 동의 저장
+    - `POST /api/v1/auth/signup` 구현
+    - 이메일·닉네임 중복 확인 API
+    - 약관 동의 저장
 - 완료 조건
-    - [ ] Swagger에서 가입 → 토큰 발급 확인
-    - [ ] 중복·필수 약관 미동의 에러 코드 확인
-    - [ ] PR 머지
+    - Swagger에서 가입 → 토큰 발급 확인
+    - 중복·필수 약관 미동의 에러 코드 확인
+    - PR 머지
 - 참고: 백엔드 기술 기획서 6.3 (Notion), 화면 WEB-JOIN-02
 - 의존성: 선행 — 프로젝트 세팅 이슈
 - 연관 파트
@@ -131,13 +133,13 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 - 제목: `[LLM] 형식 요소 판정 엔드포인트 구현`
 - 목적: Spring이 사용자 프롬프트의 형식 요소(6요소) 판정을 받을 수 있도록 `POST /v1/analyze`를 구현한다
 - 작업 내용
-    - [ ] `ai-server/src/routers/`에 `POST /v1/analyze` 구현
-    - [ ] `ai-server/src/schemas/`에 요청·응답 스키마 (`docs/dev/specs/interfaces.md` > 3.3 기준)
-    - [ ] 판정 실패 시 `degraded` 응답 (`interfaces.md` > 3.9 · 3.10)
+    - `ai-server/src/routers/`에 `POST /v1/analyze` 구현
+    - `ai-server/src/schemas/`에 요청·응답 스키마 (`docs/dev/specs/interfaces.md` > 3.3 기준)
+    - 판정 실패 시 `degraded` 응답 (`interfaces.md` > 3.9 · 3.10)
 - 완료 조건
-    - [ ] FastAPI `/docs`에서 정상 요청·응답 확인
-    - [ ] `uv run --directory ai-server pytest -q` 통과
-    - [ ] PR 머지
+    - FastAPI `/docs`에서 정상 요청·응답 확인
+    - `uv run --directory ai-server pytest -q` 통과
+    - PR 머지
 - 연관 파트
     - 영향 받는 파트: BE — `infra/ai` DTO 연동
     - 공유 필요 사항: 응답 스키마 (`interfaces.md` > 3.3)
@@ -146,30 +148,14 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 
 ## 4. 하위 작업 (Subtask)
 
-상위 이슈 아래에서 나눠 하는 작업이다. 양식은 3장(개발) 또는 6장(비개발)을 그대로 쓰고, 아래만 다르다.
+하위 작업은 **가능하면 만들지 않는다.** 큰 작업은 에픽 아래 Story·Task로 나눈다.
 
-```markdown
-<!--
-[AI 작성 안내 — Jira MCP·커넥터로 등록할 때]
-이슈 유형: Subtask
-상위 이슈 키를 먼저 확인하고, 그 이슈가 실제로 있는지 조회한 뒤 만든다.
-제목 형식과 본문 양식은 3장 또는 6장과 같다.
-"의존성"에 상위 이슈를 적는다.
-등록 시 필드:
-  issuetype: Subtask
-  parent:    상위 이슈 키 (예: KAN-28)
-  summary:   [파트] 동사 + 대상
-  assignee:  담당자
--->
-```
-
-```markdown
-## 의존성
-- 상위: KAN-00 (상위 이슈 제목)
-- 선행: KAN-00
-```
-
-- 한 하위 작업을 PR 여러 개로 나누면 작업 내용에 PR별 항목을 적는다 (예: `### PR ① …`, `### PR ② …`).
+- 이유: 하위 작업은 브랜치·PR·상태가 상위 이슈와 따로 움직여 추적이 어렵다. 같은 크기의 작업은 Story·Task로 두는 편이 브랜치(`KAN-번호`)와 1:1로 맞는다.
+- 예외: 이미 하위 작업으로 만들어진 이슈를 고칠 때, 또는 팀이 명시적으로 하위 작업을 요청했을 때만 다룬다.
+    - 상위 이슈 키를 확인하고, 그 이슈가 실제로 있는지 조회한다.
+    - 본문은 3장 또는 6장 양식을 쓰고, "의존성"에 상위 이슈를 적는다 (`- 상위: KAN-00 (상위 이슈 제목)`).
+    - 등록 시 필드: `issuetype: Subtask`, `parent: 상위 이슈 키`
+- 한 이슈를 PR 여러 개로 나누면 작업 내용에 PR별 항목을 적는다 (예: `### PR ① …`, `### PR ② …`).
 
 ---
 
@@ -268,8 +254,8 @@ Critical / High / Medium / Low (하나만 남기기)
 - 무엇이 나와야 끝인가 (문서 / 프레임 / 표)
 
 ## 할 일
-- [ ] 
-- [ ] 
+- 
+- 
 
 ## 공유 대상 / 확인자
 - 
@@ -306,7 +292,7 @@ Critical / High / Medium / Low (하나만 남기기)
 - 
 
 ## 후속 조치
-- [ ] 담당 파트 / 내용 / 이슈 KEY
+- 담당 파트 / 내용 / 이슈 KEY
 ```
 
 ---
@@ -334,7 +320,7 @@ Critical / High / Medium / Low (하나만 남기기)
 
 | 도구 | 연결 | 등록 |
 | --- | --- | --- |
-| Claude Code | `.mcp.json`의 Jira MCP (`jira_get_issue` · `jira_create_issue` · `jira_create_subtask` · `jira_update_issue`). 설정은 `docs/dev/ai/README.md` > `5. MCP·CLI 연결 (Claude Code)` | 초안 파일(`.claude/drafts/KAN-<번호>-issue.md`) 확인 → 승인 → 등록. 생성은 실행 전 확인 창이 뜬다 |
+| Claude Code | `.mcp.json`의 Jira MCP (`jira_get_issue` · `jira_create_issue` · `jira_update_issue`). 설정은 `docs/dev/ai/README.md` > `5. MCP·CLI 연결 (Claude Code)` | 초안 파일(`.claude/drafts/KAN-<번호>-issue.md`) 확인 → 승인 → 등록. 생성은 실행 전 확인 창이 뜬다 |
 | claude.ai 웹 채팅 | Atlassian 커넥터 (claude.ai → Settings → Connectors → Atlassian) | 초안 코드블록 확인 → 승인 → 등록. 커넥터가 없으면 직접 붙여 넣기 |
 
 요청 예시
