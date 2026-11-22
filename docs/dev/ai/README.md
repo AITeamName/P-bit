@@ -125,7 +125,9 @@ AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 �
 | 연동 | 방식 | 쓰는 단계 |
 | --- | --- | --- |
 | Jira | MCP — `.mcp.json`의 `jira` (`mcp-jira-stdio`) | `00` 이슈 조회, `20` 이슈 등록·수정 |
-| GitHub | `gh` CLI (기본) + MCP — `.mcp.json`의 `github` (GitHub 공식 원격 서버) | `40` B PR 조회, `50` PR 등록, `60` 코멘트·CI 조회 |
+| GitHub | `gh` CLI (기본) + MCP — `.mcp.json`의 `github` (GitHub 공식 원격 서버, **읽기 전용** `X-MCP-Readonly`) | `40` B PR 조회, `50` PR 등록, `60` 코멘트·CI 조회 |
+
+- GitHub 쓰기(PR 생성·코멘트 등)는 `gh`로만 한다. 무엇이 대화 승인이고 무엇이 승인 창인지는 `AGENTS.md` > `0. Absolute rules` > `Approval` 표.
 
 연동이 없어도 모든 단계는 붙여 넣기 방식으로 끝까지 진행된다.
 
@@ -203,6 +205,7 @@ claude mcp remove github --scope local
 ```
 
 - 이 명령은 토큰 값을 개인 설정 파일(`~/.claude.json`)에 저장한다. 되돌리면 함께 지워진다.
+- 로컬 Docker 실행에는 원격 서버의 읽기 전용 헤더가 적용되지 않는다. 쓰기 도구는 `.claude/settings.json`의 승인 창 목록으로 막힌다.
 - 버전을 올릴 때는 태그(`v2.2.0`)만 바꿔 다시 추가한다.
 
 ### 5.5 실패할 때
