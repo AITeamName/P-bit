@@ -28,10 +28,12 @@ Write a Jira issue body from the settled scope, and register it, or update an ex
     - Put reference document locations and prerequisite issues in the reference and dependency fields.
     - Leave values not in the inputs (due date, assignee, issue keys) empty, and list them as questions outside the body.
     - Do not copy template example sentences as facts. Remove guide comments and placeholders.
-    - Write lists as plain bullets (`-`). Markdown checkboxes (`- [ ]`) stay as `[ ]` text in Jira.
+    - Write items to be checked off (work items, done criteria) as checkboxes (`- [ ]`). Write other lists as plain bullets (`-`).
 4. **Save it as a draft file.** `.claude/drafts/KAN-<number>-issue.md` (for a new issue with no key yet, `KAN-new-<summary>-issue.md`). Give the path.
     - For an update, show only the changed parts as a comparison. If the description was empty, show the whole body.
 5. **Wait for approval.** When the user has reviewed or edited the file and says to register, register or update it with the file content as it is.
+    - If the body has checkboxes (`- [ ]`), convert the whole body to ADF and send it with `format: "adf"` (`jira-guide.md` > `9. AI로 작성·등록할 때`). With `format: "markdown"`, checkboxes stay as `[ ]` text.
+    - After registering, read the issue again and check that the number of checklist items matches the draft.
 6. After registration, give the issue key and link.
 
 ## Output format
@@ -68,4 +70,4 @@ Save the body to the file, and show only the summary above in the chat.
 | --- | --- | --- |
 | Reading an existing issue | Reads it through Jira MCP | The user pastes it |
 | Draft | Saved as a file under `.claude/drafts/` | Output as a Markdown code block |
-| Registration | After approval, creates or updates it through Jira MCP and gives the key (creation shows an approval prompt before it runs) | The user pastes it into Jira. If the Atlassian connector is connected, registers it after approval |
+| Registration | After approval, creates or updates it through Jira MCP and gives the key. Converts to ADF when there are checkboxes (creation shows an approval prompt before it runs) | The user pastes it into Jira and turns checkboxes into checklist items in the editor (`[]` + space). If the Atlassian connector is connected, registers it after approval |

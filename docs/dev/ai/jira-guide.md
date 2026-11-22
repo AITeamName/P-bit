@@ -7,7 +7,10 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 
 - 사람이 Jira 화면에서 직접 쓸 때와 AI가 쓸 때(`docs/dev/ai/prompts/20-issue-write.md`) 같은 양식을 쓴다.
 - 각 양식 위의 HTML 주석은 AI 작성 안내다. 이슈에 붙여 넣을 때는 지운다.
-- 설명란의 목록은 글머리(`-`)로 쓴다. 마크다운 체크박스(`- [ ]`)는 Jira에서 체크박스가 아니라 `[ ]` 글자로 남는다. 완료 여부는 이슈 상태와 연결된 PR로 본다.
+- 완료를 체크할 목록(작업 내용, 완료 조건, 할 일, 후속 조치)은 체크박스(`- [ ]`)로 쓴다. 그 밖의 목록은 글머리(`-`)로 쓴다.
+    - Jira 설명란은 마크다운이 아니라 ADF라는 형식이라, `- [ ]`를 그대로 붙여 넣거나 MCP에 `format: markdown`으로 보내면 체크박스가 아니라 `[ ]` 글자로 남는다.
+    - AI가 등록할 때(Claude Code): 초안을 ADF로 바꿔 체크박스를 Jira 체크리스트로 등록한다 (§9).
+    - 사람이 Jira 화면에서 쓸 때: 편집기에서 `[]` 다음 스페이스를 입력하면 체크리스트 항목이 생긴다.
 - 하위 작업(Subtask)은 가능하면 만들지 않는다 (§4).
 
 ---
@@ -84,13 +87,13 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 왜 하는지 1~2줄
 
 ## 작업 내용
-- 
-- 
+- [ ] 
+- [ ] 
 
 ## 완료 조건 (DoD)
-- 동작 확인 방법
-- 테스트 / Swagger 반영
-- PR 머지
+- [ ] 동작 확인 방법
+- [ ] 테스트 / Swagger 반영
+- [ ] PR 머지
 
 ## 참고
 - 기획서: (Notion 링크 + 섹션 번호)
@@ -114,13 +117,13 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 - 제목: `[BE] 회원가입 API 구현`
 - 목적: 웹 자체 회원가입 기능을 제공해 사용자가 서비스에 직접 가입할 수 있도록 한다 (WEB-JOIN-01/02)
 - 작업 내용
-    - `POST /api/v1/auth/signup` 구현
-    - 이메일·닉네임 중복 확인 API
-    - 약관 동의 저장
+    - [ ] `POST /api/v1/auth/signup` 구현
+    - [ ] 이메일·닉네임 중복 확인 API
+    - [ ] 약관 동의 저장
 - 완료 조건
-    - Swagger에서 가입 → 토큰 발급 확인
-    - 중복·필수 약관 미동의 에러 코드 확인
-    - PR 머지
+    - [ ] Swagger에서 가입 → 토큰 발급 확인
+    - [ ] 중복·필수 약관 미동의 에러 코드 확인
+    - [ ] PR 머지
 - 참고: 백엔드 기술 기획서 6.3 (Notion), 화면 WEB-JOIN-02
 - 의존성: 선행 — 프로젝트 세팅 이슈
 - 연관 파트
@@ -133,13 +136,13 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 - 제목: `[LLM] 형식 요소 판정 엔드포인트 구현`
 - 목적: Spring이 사용자 프롬프트의 형식 요소(6요소) 판정을 받을 수 있도록 `POST /v1/analyze`를 구현한다
 - 작업 내용
-    - `ai-server/src/routers/`에 `POST /v1/analyze` 구현
-    - `ai-server/src/schemas/`에 요청·응답 스키마 (`docs/dev/specs/interfaces.md` > 3.3 기준)
-    - 판정 실패 시 `degraded` 응답 (`interfaces.md` > 3.9 · 3.10)
+    - [ ] `ai-server/src/routers/`에 `POST /v1/analyze` 구현
+    - [ ] `ai-server/src/schemas/`에 요청·응답 스키마 (`docs/dev/specs/interfaces.md` > 3.3 기준)
+    - [ ] 판정 실패 시 `degraded` 응답 (`interfaces.md` > 3.9 · 3.10)
 - 완료 조건
-    - FastAPI `/docs`에서 정상 요청·응답 확인
-    - `uv run --directory ai-server pytest -q` 통과
-    - PR 머지
+    - [ ] FastAPI `/docs`에서 정상 요청·응답 확인
+    - [ ] `uv run --directory ai-server pytest -q` 통과
+    - [ ] PR 머지
 - 연관 파트
     - 영향 받는 파트: BE — `infra/ai` DTO 연동
     - 공유 필요 사항: 응답 스키마 (`interfaces.md` > 3.3)
@@ -254,8 +257,8 @@ Critical / High / Medium / Low (하나만 남기기)
 - 무엇이 나와야 끝인가 (문서 / 프레임 / 표)
 
 ## 할 일
-- 
-- 
+- [ ] 
+- [ ] 
 
 ## 공유 대상 / 확인자
 - 
@@ -292,7 +295,7 @@ Critical / High / Medium / Low (하나만 남기기)
 - 
 
 ## 후속 조치
-- 담당 파트 / 내용 / 이슈 KEY
+- [ ] 담당 파트 / 내용 / 이슈 KEY
 ```
 
 ---
@@ -320,8 +323,20 @@ Critical / High / Medium / Low (하나만 남기기)
 
 | 도구 | 연결 | 등록 |
 | --- | --- | --- |
-| Claude Code | `.mcp.json`의 Jira MCP (`jira_get_issue` · `jira_create_issue` · `jira_update_issue`). 설정은 `docs/dev/ai/README.md` > `5. MCP·CLI 연결 (Claude Code)` | 초안 파일(`.claude/drafts/KAN-<번호>-issue.md`) 확인 → 승인 → 등록. 생성은 실행 전 확인 창이 뜬다 |
-| claude.ai 웹 채팅 | Atlassian 커넥터 (claude.ai → Settings → Connectors → Atlassian) | 초안 코드블록 확인 → 승인 → 등록. 커넥터가 없으면 직접 붙여 넣기 |
+| Claude Code | `.mcp.json`의 Jira MCP (`jira_get_issue` · `jira_create_issue` · `jira_update_issue`). 설정은 `docs/dev/ai/README.md` > `5. MCP·CLI 연결 (Claude Code)` | 초안 파일(`.claude/drafts/KAN-<번호>-issue.md`) 확인 → 승인 → 등록. 체크박스가 있으면 본문 전체를 ADF로 바꿔 `format: adf`로 보낸다. 생성은 실행 전 확인 창이 뜬다 |
+| claude.ai 웹 채팅 | Atlassian 커넥터 (claude.ai → Settings → Connectors → Atlassian) | 초안 코드블록 확인 → 승인 → 등록. 커넥터가 없으면 직접 붙여 넣기. 등록 후 체크박스가 `[ ]` 글자로 보이면 Jira 화면에서 체크리스트로 바꾼다 |
+
+ADF 변환 규칙 (AI가 등록할 때)
+
+| 마크다운 | ADF |
+| --- | --- |
+| `## 제목` · `### 제목` | `heading` (level 2 · 3) |
+| 문장 | `paragraph` |
+| `- 항목` | `bulletList` > `listItem` > `paragraph` |
+| `- [ ] 항목` · `- [x] 항목` | `taskList` > `taskItem` (`state`: `TODO` · `DONE`, `localId`는 항목마다 새 UUID) |
+| `` `코드` `` | `text` + `code` mark |
+
+- 등록 후 이슈를 다시 조회해 체크리스트 항목 수가 초안과 같은지 확인한다.
 
 요청 예시
 
