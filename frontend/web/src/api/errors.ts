@@ -15,7 +15,7 @@ type ErrorBody = {
     requestId: string | null // 서버 로그에서 요청을 찾기 위한 번호
     fieldErrors: FieldError[] // 칸별 오류 목록
   }
-  fallback: unknown // 오류와 함께 오는 대체 값 (없을 수 있음)
+  fallback: unknown // AI 판정 실패 시 서버가 보내는 축소 화면용 결과 (충족률·레벨), 없으면 null
 }
 
 // 서버에 닿지 못한 경우의 오류 코드 (인터넷 끊김 등)
@@ -43,7 +43,7 @@ export class ApiError extends Error {
   readonly retryable: boolean
   readonly requestId: string | null
   readonly fieldErrors: FieldError[]
-  readonly fallback: unknown
+  readonly fallback: unknown // 서버 응답의 fallback 그대로 (없으면 null)
 
   constructor(init: ApiErrorInit) {
     super(init.code) // 기본 오류 메시지는 오류 코드

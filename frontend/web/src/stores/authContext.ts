@@ -1,7 +1,7 @@
 // 로그인 상태 보관함(Context) 정의 (값은 auth.tsx의 AuthProvider가 채우고, 이 파일은 모양과 꺼내 쓰는 도구만 정의)
 import { createContext, useContext } from 'react'
 
-// 로그인 상태 세 가지
+// 로그인 상태 네 가지
 //  loading: 확인 중 (앱 시작, 새로고침 직후)
 //  authenticated: 로그인됨
 //  anonymous: 로그인하지 않음 (서버가 로그인 정보가 없거나 만료됐다고 응답)
