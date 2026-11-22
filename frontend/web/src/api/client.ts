@@ -2,6 +2,7 @@ import { ApiError, NETWORK_ERROR, toApiError } from './errors.ts'
 
 export type ClientOptions = {
   baseUrl: string
+  language: string // 화면 언어 (요청마다 Accept-Language로 전송)
   fetchFn?: typeof fetch
   onAuthFailure?: () => void
 }
@@ -35,7 +36,7 @@ export function createApiClient(options: ClientOptions) {
 
   async function send(path: string, opts: RequestOptions, idempotencyKey?: string): Promise<Response> {
     const hasBody = opts.body !== undefined
-    const headers = new Headers({ 'X-Client-Channel': 'WEB', Accept: 'application/json' })
+    const headers = new Headers({ 'X-Client-Channel': 'WEB', Accept: 'application/json', 'Accept-Language': options.language })
     if (hasBody) headers.set('Content-Type', 'application/json')
     if (idempotencyKey) headers.set('Idempotency-Key', idempotencyKey)
     if (opts.auth !== false && accessToken) headers.set('Authorization', `Bearer ${accessToken}`)

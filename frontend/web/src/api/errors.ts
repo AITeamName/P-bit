@@ -87,13 +87,11 @@ export async function toApiError(res: Response): Promise<ApiError> {
   })
 }
 
-// 서버가 문구를 주지 않는 오류(네트워크 끊김, JSON이 아닌 응답)에 보여 주는 기본 문구
-export const FALLBACK_ERROR_MESSAGE = '잠시 후 다시 시도해주세요.'
-
-// 화면에 보여 줄 오류 문구 (서버 문구가 있으면 그대로, 없으면 기본 문구)
+// 화면에 보여 줄 오류 문구 (서버 문구가 있으면 그대로, 없으면 호출하는 쪽이 넘긴 기본 문구)
+// 서버가 문구를 주지 않는 오류: 네트워크 끊김, JSON이 아닌 응답
 // 기본 문구를 쓸 때는 원인을 알 수 있게 콘솔에 오류를 남김
-export function getUserMessage(error: unknown): string {
+export function getUserMessage(error: unknown, fallbackMessage: string): string {
   if (error instanceof ApiError && error.userMessage !== null) return error.userMessage
   console.error('서버가 준 문구가 없어 기본 문구를 보여 줍니다', error)
-  return FALLBACK_ERROR_MESSAGE
+  return fallbackMessage
 }

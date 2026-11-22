@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pbit.api.global.config.CorsConfig;
 import com.pbit.api.global.config.SecurityConfig;
+import com.pbit.api.support.TestJwtConfig;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -31,7 +32,7 @@ import jakarta.validation.constraints.NotBlank;
 
 // 웹 계층만 띄우는 테스트라 DB 없이 실행된다
 @WebMvcTest(controllers = ErrorHandlingTest.TestErrorController.class)
-@Import({ErrorHandlingTest.TestErrorController.class, SecurityConfig.class, CorsConfig.class, ErrorResponseWriter.class})
+@Import({ErrorHandlingTest.TestErrorController.class, SecurityConfig.class, CorsConfig.class, ErrorResponseWriter.class, TestJwtConfig.class})
 class ErrorHandlingTest {
 
 	private static final String FRONT_ORIGIN = "http://localhost:5173";
