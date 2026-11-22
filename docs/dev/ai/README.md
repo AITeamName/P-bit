@@ -136,7 +136,11 @@ AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 �
 | `JIRA_BASE_URL` | — | `https://ppbbit.atlassian.net` |
 | `JIRA_EMAIL` | — | Atlassian 로그인 이메일 |
 | `JIRA_API_TOKEN` | https://id.atlassian.com/manage-profile/security/api-tokens → Create API token | 만료일을 정해서 발급 |
-| `GITHUB_TOKEN` | GitHub → Settings → Developer settings → Fine-grained tokens | 대상 저장소만, Contents·Pull requests·Issues 읽기 |
+| `GITHUB_MCP_TOKEN` | GitHub → Settings → Developer settings → Fine-grained tokens | 대상 저장소만, Contents·Pull requests·Issues 읽기 |
+
+- GitHub 토큰은 `GITHUB_TOKEN`이 아니라 `GITHUB_MCP_TOKEN`으로 등록한다.
+    - `gh` CLI는 `GITHUB_TOKEN` 환경변수가 있으면 로그인 계정보다 그 값을 먼저 쓴다.
+    - 읽기 전용 토큰을 `GITHUB_TOKEN`으로 두면 `gh pr create` 같은 쓰기 명령이 권한 오류로 실패한다.
 
 ### 5.2 환경변수 등록
 
@@ -148,7 +152,7 @@ Claude Code는 `.mcp.json`의 `${VAR}`를 **실행 중인 프로세스의 OS 환
 [Environment]::SetEnvironmentVariable("JIRA_BASE_URL", "https://ppbbit.atlassian.net", "User")
 [Environment]::SetEnvironmentVariable("JIRA_EMAIL", "본인 이메일", "User")
 [Environment]::SetEnvironmentVariable("JIRA_API_TOKEN", (Read-Host "Jira API token"), "User")
-[Environment]::SetEnvironmentVariable("GITHUB_TOKEN", (Read-Host "GitHub token"), "User")
+[Environment]::SetEnvironmentVariable("GITHUB_MCP_TOKEN", (Read-Host "GitHub token"), "User")
 ```
 
 **macOS / Linux — `~/.zshrc` 또는 `~/.bashrc`**
@@ -157,7 +161,7 @@ Claude Code는 `.mcp.json`의 `${VAR}`를 **실행 중인 프로세스의 OS 환
 export JIRA_BASE_URL="https://ppbbit.atlassian.net"
 export JIRA_EMAIL="본인 이메일"
 export JIRA_API_TOKEN="..."
-export GITHUB_TOKEN="..."
+export GITHUB_MCP_TOKEN="..."
 ```
 
 등록 후 **에디터(VS Code·IntelliJ)를 완전히 종료하고 다시 연다.** 열려 있던 프로세스는 새 환경변수를 받지 못한다.
@@ -169,7 +173,7 @@ export GITHUB_TOKEN="..."
 ```bash
 # ① 환경변수
 echo "$JIRA_BASE_URL"
-echo "${#JIRA_API_TOKEN} ${#GITHUB_TOKEN}"     # 0이 아니면 등록됨
+echo "${#JIRA_API_TOKEN} ${#GITHUB_MCP_TOKEN}"     # 0이 아니면 등록됨
 
 # ② Jira API 직접 호출 — 여기서 실패하면 MCP 문제가 아니다
 curl -s -u "$JIRA_EMAIL:$JIRA_API_TOKEN" "$JIRA_BASE_URL/rest/api/3/myself" | head -c 200
@@ -191,7 +195,7 @@ GitHub MCP 서버 버전을 고정하고 싶으면 `.mcp.json`은 그대로 두�
 
 ```bash
 # Git Bash · macOS · Linux
-claude mcp add github --scope local -e GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN" -- docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server:v2.2.0
+claude mcp add github --scope local -e GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_MCP_TOKEN" -- docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server:v2.2.0
 claude mcp get github           # Scope: Local config 이면 적용됨
 
 # 되돌리기
@@ -210,9 +214,10 @@ claude mcp remove github --scope local
 | ② `401 Unauthorized` | 이메일·토큰 불일치, 토큰 만료 | 토큰 재발급, `JIRA_EMAIL`이 Atlassian 계정 이메일인지 확인 |
 | ② `404` (myself는 성공) | 프로젝트 권한 없음 | Jira 관리자에게 KAN 프로젝트 권한 요청 |
 | ②는 성공, ④ `Network error` | Claude Code 프로세스가 환경변수를 못 받음 | 에디터 재시작, `/mcp`에서 재연결 |
+| `gh pr create` 등이 `Resource not accessible by personal access token` | 환경변수 `GITHUB_TOKEN`(또는 `GH_TOKEN`)에 읽기 전용 토큰이 들어 있어 `gh`가 로그인 계정 대신 그 토큰을 씀 | MCP 토큰은 `GITHUB_MCP_TOKEN`으로 등록하고 `GITHUB_TOKEN`은 지운다 (§5.2) |
 | `/mcp`에 서버가 없음 | 프로젝트 MCP 승인을 거부함 | 세션을 다시 열어 승인 |
 | PowerShell 명령이 `command not found` | Git Bash에서 PowerShell 문법을 실행함 | 터미널을 PowerShell로 바꿔 실행 |
-| `$env:...` 값이 문자 그대로 들어감 | Git Bash에서 PowerShell 변수 문법을 씀 | Git Bash에서는 `$GITHUB_TOKEN`처럼 쓴다 |
+| `$env:...` 값이 문자 그대로 들어감 | Git Bash에서 PowerShell 변수 문법을 씀 | Git Bash에서는 `$GITHUB_MCP_TOKEN`처럼 쓴다 |
 
 ### 5.6 보안
 
