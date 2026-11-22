@@ -12,12 +12,31 @@ The reference documents are written in Korean. Locations below keep the original
 
 1. The repository documents are the source of truth. Use conversations, Notion, or earlier sessions as grounds only when the content is reflected in a repository document.
 2. Do not fill in values you could not confirm in a document (dates, Jira keys, assignees, policy values, verification results). Leave them blank and ask the user.
-3. Do not do the following without the user's approval:
-    - `git push`
-    - Register a Jira issue
-    - Register a GitHub PR
-    - Post a comment or review on Jira or GitHub
+3. Do not take any action in the approval table below without the user's approval.
 4. Never write secrets (tokens, passwords, keys) to files, commits, issues, or PRs, and never print them. If you need to check one, look only at its length or format.
+
+### Approval
+
+Approval comes in two forms.
+
+- **Chat approval** (every AI tool): show the draft, diff, or command, and wait until the user says to go ahead in the chat (for example, "커밋해", "등록해"). Never skip it.
+- **Approval prompt** (Claude Code only, `.claude/settings.json` > `permissions.ask`): Claude Code asks again right before running the command. It is a second lock for actions that are hard to undo or that bypass another check. It does not replace chat approval.
+
+| Action | Chat approval | Approval prompt |
+| --- | --- | --- |
+| `git push` (including `git -C <dir> push`) | Yes | Yes |
+| Create a PR (`gh pr create`) | Yes | Yes |
+| Merge a PR (`gh pr merge`) — normally done by a person | Yes | Yes |
+| Write through `gh api` (`-X POST`, `PATCH`, `PUT`, `DELETE`) | Yes | Yes |
+| Create a Jira issue | Yes | Yes |
+| Commit (each commit) | Yes | No |
+| Update a Jira issue or change its status, edit a PR body | Yes | No |
+| Post a comment or review on Jira or GitHub — normally posted by a person | Yes | No |
+| Create or switch a branch, change files outside the plan | Yes | No |
+| Read (status, log, diff, viewing issues and PRs) | No | No |
+
+- Actions with chat approval only are not on the approval prompt list on purpose. The user already approves the draft in the chat, so a second prompt would ask for the same thing twice.
+- The GitHub MCP server is connected read-only (`X-MCP-Readonly`). Write to GitHub through `gh`.
 
 ## 1. Before starting work
 
