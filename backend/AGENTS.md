@@ -43,7 +43,6 @@ com.pbit.api
 
 - New features follow the same shape. Do not create empty folders.
 - Put non-DTO result records returned by a service (for example, `SignupResult`, `IssuedRefreshToken`) in `service/`.
-- Splitting the existing flat `auth/dto` into `request/` and `response/` is planned in KAN-69. Until then, keep new DTOs consistent with the folder you are working in.
 - Put code in `global/` only when several features use it. Code used by one feature stays in that feature.
 - To use another feature's data, call that feature's Service. Do not use another feature's Repository directly.
 
@@ -60,6 +59,7 @@ com.pbit.api
 ### DTOs
 
 - Use `record`. Name them `{Action}Request` / `{Action}Response`.
+- Put request DTOs in `dto/request/` and response DTOs in `dto/response/`.
 - Validate with Bean Validation and put the user-facing text in `message`. It becomes `fieldErrors[].reason` in the error response.
 - Map entity → response with a static `from(entity)` on the response DTO.
 - JSON fields are camelCase. Convert to FastAPI's snake_case and lowercase enums only in the `infra/ai` DTOs (`docs/dev/specs/interfaces.md` > 7장).
