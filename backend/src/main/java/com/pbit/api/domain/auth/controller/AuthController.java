@@ -3,6 +3,7 @@ package com.pbit.api.domain.auth.controller;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,10 +16,14 @@ import com.pbit.api.domain.auth.dto.request.SignupRequest;
 import com.pbit.api.domain.auth.dto.response.AvailabilityResponse;
 import com.pbit.api.domain.auth.dto.response.LoginResponse;
 import com.pbit.api.domain.auth.dto.response.SignupResponse;
+import com.pbit.api.domain.auth.dto.response.TokenRefreshResponse;
 import com.pbit.api.domain.auth.service.LoginResult;
 import com.pbit.api.domain.auth.service.LoginService;
+import com.pbit.api.domain.auth.service.RefreshTokenService;
 import com.pbit.api.domain.auth.service.SignupResult;
 import com.pbit.api.domain.auth.service.SignupService;
+import com.pbit.api.domain.auth.service.TokenRefreshResult;
+import com.pbit.api.domain.auth.service.TokenRefreshService;
 import com.pbit.api.domain.user.validation.UserRules;
 import com.pbit.api.global.auth.RefreshTokenCookieFactory;
 import com.pbit.api.global.error.ErrorResponse;
@@ -37,7 +42,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "인증", description = "회원가입·로그인")
+@Tag(name = "인증", description = "회원가입·로그인·토큰 재발급·로그아웃")
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -45,6 +50,8 @@ public class AuthController {
 
 	private final SignupService signupService;
 	private final LoginService loginService;
+	private final TokenRefreshService tokenRefreshService;
+	private final RefreshTokenService refreshTokenService;
 	private final RefreshTokenCookieFactory refreshTokenCookieFactory;
 
 	@Operation(summary = "회원가입", description = "이메일 자체 가입 + 약관 동의 저장 + 토큰 발급 (WEB-JOIN-01, 02)")
@@ -105,6 +112,40 @@ public class AuthController {
 		return ResponseEntity.ok()
 			.header(HttpHeaders.SET_COOKIE, refreshTokenCookieFactory.create(result.refreshToken()).toString())
 			.body(LoginResponse.from(result));
+	}
+
+	@Operation(summary = "토큰 재발급", description = "refresh_token 쿠키로 새 Access Token 발급 + Refresh Token 교체(rotation). "
+		+ "Access Token이 만료돼도 호출할 수 있다. 같은 Refresh Token은 한 번만 쓸 수 있어 동시에 두 번 호출하면 두 번째는 401")
+	@SecurityRequirements
+	@ApiResponse(responseCode = "200", description = "재발급 성공. 새 refresh 토큰은 Set-Cookie로 교체",
+		headers = @Header(name = HttpHeaders.SET_COOKIE, description = "refresh_token=...; Path=/api/v1/auth; HttpOnly; SameSite=Lax"))
+	@ApiResponse(responseCode = "401", description = "REFRESH_TOKEN_INVALID 쿠키 없음·만료·이미 사용·탈퇴 회원 → 다시 로그인",
+		content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+	@PostMapping("/refresh")
+	public ResponseEntity<TokenRefreshResponse> refresh(
+		@Parameter(hidden = true) @CookieValue(name = RefreshTokenCookieFactory.COOKIE_NAME, required = false) String refreshToken
+	) {
+		// 쿠키가 없으면 null로 들어오고, 서비스가 REFRESH_TOKEN_INVALID로 처리한다
+		TokenRefreshResult result = tokenRefreshService.refresh(refreshToken);
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, refreshTokenCookieFactory.create(result.refreshToken()).toString())
+			.body(TokenRefreshResponse.from(result));
+	}
+
+	@Operation(summary = "로그아웃", description = "refresh_token 쿠키의 Refresh Token을 폐기하고 쿠키를 지운다 (현재 기기만). "
+		+ "Access Token이 만료돼도 호출할 수 있다. 쿠키가 없거나 이미 폐기된 토큰이어도 204")
+	@SecurityRequirements
+	@ApiResponse(responseCode = "204", description = "로그아웃 완료. refresh_token 쿠키 삭제",
+		headers = @Header(name = HttpHeaders.SET_COOKIE, description = "refresh_token=; Path=/api/v1/auth; Max-Age=0; HttpOnly; SameSite=Lax"))
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(
+		@Parameter(hidden = true) @CookieValue(name = RefreshTokenCookieFactory.COOKIE_NAME, required = false) String refreshToken
+	) {
+		// 프론트는 결과와 상관없이 로그인 화면으로 가므로, 토큰 상태와 관계없이 항상 성공으로 응답한다
+		refreshTokenService.revoke(refreshToken);
+		return ResponseEntity.noContent()
+			.header(HttpHeaders.SET_COOKIE, refreshTokenCookieFactory.delete().toString())
+			.build();
 	}
 
 }
