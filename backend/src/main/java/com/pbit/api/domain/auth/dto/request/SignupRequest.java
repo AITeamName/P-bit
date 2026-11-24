@@ -1,4 +1,4 @@
-package com.pbit.api.domain.auth.dto;
+package com.pbit.api.domain.auth.dto.request;
 
 import java.util.List;
 
