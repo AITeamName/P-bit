@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.pbit.api.domain.term.dto.TermDetailResponse;
-import com.pbit.api.domain.term.dto.TermSummaryResponse;
+import com.pbit.api.domain.term.dto.response.TermDetailResponse;
+import com.pbit.api.domain.term.dto.response.TermSummaryResponse;
 import com.pbit.api.domain.term.entity.TermCode;
 import com.pbit.api.domain.term.repository.TermRepository;
 import com.pbit.api.global.error.BusinessException;

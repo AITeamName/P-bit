@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.pbit.api.domain.auth.service.LoginService;
 import com.pbit.api.domain.auth.service.RefreshTokenService;
 import com.pbit.api.domain.auth.service.SignupService;
 import com.pbit.api.domain.term.repository.TermRepository;
@@ -46,6 +47,10 @@ class AuthCheckControllerTest {
 
 	@MockitoBean
 	private RefreshTokenService refreshTokenService;
+
+	// AuthController 생성에 필요. 이 테스트에서는 쓰지 않는다
+	@MockitoBean
+	private LoginService loginService;
 
 	@Test
 	void 가입되지_않은_이메일이면_available_true() throws Exception {

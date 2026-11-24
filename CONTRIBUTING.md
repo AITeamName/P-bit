@@ -314,7 +314,7 @@ git commit -m "chore(scope): develop 병합 충돌 해결"
 - ❌ 다른 파트 폴더를 상의 없이 수정
 - ❌ `.env` 파일 커밋
 - ❌ API Key, 비밀번호 등 민감 정보 커밋
-- ❌ `ai-server/prompts/rubric/vN.yaml` 기존 파일 덮어쓰기 (버전업은 신규 파일 생성)
+- ❌ `ai-server/prompts/rubric/vN/` 이미 배포된 버전 디렉터리 수정 (버전업은 디렉터리를 새로 만든다. 상세: `docs/dev/llm/model-design.md` 4.1)
 
 ### ✅ 필수 수칙
 

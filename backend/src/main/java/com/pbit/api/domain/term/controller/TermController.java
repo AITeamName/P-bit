@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pbit.api.domain.term.dto.TermDetailResponse;
-import com.pbit.api.domain.term.dto.TermSummaryResponse;
+import com.pbit.api.domain.term.dto.response.TermDetailResponse;
+import com.pbit.api.domain.term.dto.response.TermSummaryResponse;
 import com.pbit.api.domain.term.entity.TermCode;
 import com.pbit.api.domain.term.service.TermService;
 import com.pbit.api.global.error.ErrorResponse;

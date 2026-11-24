@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-// 온보딩·레벨 컬럼(domain, self_reported_level, current_level 등)은 해당 기능 이슈에서 매핑한다
 @Entity
 @Table(name = "users")
 @Getter
@@ -42,6 +41,23 @@ public class User {
 
 	@Column(name = "provider_id", length = 100)
 	private String providerId;
+
+	// 아래 네 값은 온보딩·진단 전에는 비어 있다. 값을 바꾸는 기능은 온보딩·진단 이슈에서 만든다
+	@Enumerated(EnumType.STRING)
+	@Column(length = 20)
+	private Domain domain;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "self_reported_level", length = 20)
+	private SelfReportedLevel selfReportedLevel;
+
+	// 진단 모드에서만 바뀐다 (연습·점검 결과로는 바꾸지 않는다)
+	@Enumerated(EnumType.STRING)
+	@Column(name = "current_level", length = 5)
+	private Level currentLevel;
+
+	@Column(name = "level_measured_at")
+	private Instant levelMeasuredAt;
 
 	@Column(name = "onboarding_completed", nullable = false)
 	private boolean onboardingCompleted;
