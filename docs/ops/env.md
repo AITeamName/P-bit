@@ -1,6 +1,6 @@
 # 환경변수 목록 — 서비스별 `.env` 키와 GitHub Secrets
  
-> 담당: 클라우드(김성민) · 최종 수정: 2026-11-15
+> 담당: 클라우드(INFRA) · 최종 수정: 2026-11-15
 > 출처: 백엔드 기술기획서 v1.1 3.2, LLM 모델 설계서 v1.0, 저장소의 `.env.example` 파일들
  
 ## 0. 비밀값 규칙 (꼭 지킬 것)
@@ -23,36 +23,36 @@
 | `DB_URL` | 📝 | ✅ | JDBC 주소 | `jdbc:postgresql://localhost:5432/pbit` |
 | `DB_USERNAME` | 📝 | ✅ | DB 사용자 | `pbit` |
 | `DB_PASSWORD` | 🔑 | ✅ | DB 비밀번호 | (로컬 전용 값) |
-| `JWT_SECRET` | 🔑 | ✅ (KAN-34 이후) | JWT 서명 키, 32자 이상 | — |
+| `JWT_SECRET` | 🔑 | ✅ | JWT 서명 키, 32자 이상 | — |
 | `JWT_ACCESS_TTL` | 📝 | | Access 토큰 유효기간 | `PT30M` |
 | `JWT_REFRESH_TTL` | 📝 | | Refresh 토큰 유효기간 | `P14D` |
 | `GOOGLE_CLIENT_ID` | 📝 | ✅ (Google 로그인) | Google OAuth 클라이언트 ID | — |
 | `GOOGLE_CLIENT_SECRET` | 🔑 | ✅ (Google 로그인) | Google OAuth 시크릿 | — |
 | `AI_BASE_URL` | 📝 | ✅ (AI 연동) | FastAPI 주소 | `http://localhost:8001` |
-| `AI_INTERNAL_TOKEN` | 🔑 | ✅ (AI 연동) | Spring→FastAPI 내부 인증 토큰. **ai-server와 같은 값.** 생성·보관: 클라우드 (김성민) | — |
+| `AI_INTERNAL_TOKEN` | 🔑 | ✅ (AI 연동) | Spring→FastAPI 내부 인증 토큰. **ai-server와 같은 값.** 생성·보관: 클라우드 (INFRA) | — |
 | `AI_TIMEOUT` | 📝 | | FastAPI 호출 타임아웃 | `PT35S` |
 | `WEB_ORIGIN` | 📝 | ✅ | CORS 허용 웹 주소 | `http://localhost:5173` |
 | `EXTENSION_ORIGIN` | 📝 | ✅ (익스텐션 연동) | CORS 허용 익스텐션 주소 | `chrome-extension://{고정 ID}` |
  
 ## 2. AI 서버 — `ai-server/` (FastAPI)
  
-기준: LLM 파트 기술 명세서 v1.0 1.4 (AI 파트 확인, 2026-11-16). 서버 포트는 **8001** (README 기준). 루브릭 YAML은 이미지에 포함되므로 환경변수가 아니다.
+| 키 | 구분 | 필수 | 설명 | 예시 / 기본값 |
+| --- | --- | --- | --- | --- |
+| `LLM_API_KEY` | 🔑 | ✅ | 외부 LLM API 키. 개발용은 사용 한도를 건 키만 공유 | — |
+| `LLM_MODEL_JUDGE` | 📝 | ✅ | 판정·조립·재판정용 모델 식별자 (중급 모델) | — |
+| `LLM_MODEL_ANSWER` | 📝 | ✅ | Before/After 답변 생성·이유 요약용 모델 식별자 (경량 모델) | — |
+| `RUBRIC_VERSION` | 📝 | ✅ | 루브릭 버전. 루브릭(요소·판정 기준)이나 판정 모델을 바꾸면 올린다. 이미지에 포함된 루브릭 YAML과 일치해야 한다 | `v1.0` |
+| `AI_INTERNAL_TOKEN` | 🔑 | ✅ | Spring ↔ FastAPI 공유 시크릿. 백엔드와 **같은 이름·같은 값**, 요청 헤더 `X-Internal-Token` 검증. 생성·보관: 클라우드 (INFRA) | — |
+| `LLM_TIMEOUT_JUDGE_SEC` | 📝 | | FastAPI → LLM 타임아웃(초): 판정·조립·재판정 (중급 모델) | `12` |
+| `LLM_TIMEOUT_ANSWER_SEC` | 📝 | | FastAPI → LLM 타임아웃(초): Before/After 답변 생성·이유 요약 (경량 모델) | `20` |
+| `LLM_MAX_RETRY` | 📝 | | FastAPI 내부 LLM 재시도 횟수 | `2` |
+| `LOG_LEVEL` | 📝 | | 로그 레벨 | `INFO` |
  
-| 키 | 구분 | 설명 | 예시 / 기본값 |
-| --- | --- | --- | --- |
-| `LLM_API_KEY` | 🔑 | 외부 LLM API 키. 개발용은 사용 한도를 건 키만 공유 | — |
-| `LLM_MODEL_JUDGE` | 📝 | 판정·조립용 모델 식별자 | — |
-| `LLM_MODEL_ANSWER` | 📝 | Before/After 답변 생성용 경량 모델 식별자 | — |
-| `RUBRIC_VERSION` | 📝 | 루브릭 버전. 모델을 바꾸면 올린다 | `v1.0` |
-| `AI_INTERNAL_TOKEN` | 🔑 | Spring ↔ FastAPI 공유 시크릿. 백엔드와 **같은 이름·같은 값**, 요청 헤더 `X-Internal-Token` 검증. 생성·보관: 클라우드 (김성민) | — |
-| `LLM_TIMEOUT_JUDGE_SEC` | 📝 | FastAPI → LLM 타임아웃(초): 판정·조립·재판정 (중급 모델) | `12` |
-| `LLM_TIMEOUT_ANSWER_SEC` | 📝 | FastAPI → LLM 타임아웃(초): Before/After 답변 생성·이유 요약 (경량 모델) | `20` |
-| `LLM_MAX_RETRY` | 📝 | FastAPI 내부 LLM 재시도 횟수 | `2` |
-| `LOG_LEVEL` | 📝 | 로그 레벨 | `INFO` |
- 
+> 서버 포트는 **8001**이고, 루브릭 YAML은 이미지에 포함되므로 환경변수가 아니다.
+> 
 > ⚠️ 타임아웃 값을 조정할 때는 **답변 타임아웃(`LLM_TIMEOUT_ANSWER_SEC`) < Nginx(30s) < Spring(35s)** 순서를 지킨다. 어기면 중간 구간에서 먼저 끊겨 504가 난다 (인터페이스 명세 4.1).
-
-> 명세서 1.4 원문은 `LLM_TIMEOUT_SEC` 하나와 내부 토큰 `INTERNAL_TOKEN`으로 적고 있으나, AI 파트 확인(2026-11-16)에 따라 타임아웃은 두 변수로 나누고 내부 토큰은 `AI_INTERNAL_TOKEN`으로 통일했다 (AI 파트가 명세서 반영 예정).
+>
+> 이 순서는 LLM 호출 1회 기준이다. `LLM_MAX_RETRY` 재시도까지 포함한 요청 전체 시간 예산은 인터페이스 명세 9장(LLM 추가 제안 A)에서 논의 중이다.
  
 ## 3. 웹 — `frontend/web/` (Vite)
  

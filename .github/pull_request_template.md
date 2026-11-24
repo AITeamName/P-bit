@@ -38,7 +38,7 @@ Squash and merge 시 이 제목이 develop 커밋 메시지가 된다.
 작성 형식: [목적/문제]를 위해 [기능/설정]을 구현/수정했습니다.
 
 P-bit 맥락 예시:
-- 프롬프트 형식 요소(명확성·구체성·역할 정의)를 판정하는 FastAPI 엔드포인트를 구현해
+- 프롬프트 형식 요소(목적·대상·분량·형식·페르소나·명확성 6요소)를 판정하는 FastAPI 엔드포인트를 구현해
   LLM 서버의 핵심 진단 기능이 동작합니다.
 - JWT 토큰 만료 시간 계산 오류를 수정해 재로그인 없이 세션이 유지됩니다.
 - Docker Compose + Spring Boot local 프로필을 연결해 단일 `.env`로 DB를 공유합니다.
@@ -55,8 +55,8 @@ P-bit 맥락 예시:
 설계상 판단이 있었던 항목에만 "왜 이렇게 했는지"를 한 줄 덧붙인다.
 
 P-bit 맥락 예시:
-- `ai-server/app/routers/diagnosis.py`에 `POST /diagnosis` 엔드포인트를 구현했습니다.
-  - 응답 스키마는 `docs/specs/llm-be-interface.md`의 v1 계약 기준을 따랐습니다.
+- `ai-server/src/routers/analyze.py`에 `POST /v1/analyze` 엔드포인트를 구현했습니다.
+  - 응답 스키마는 `docs/dev/specs/interfaces.md` 3.3의 계약 기준을 따랐습니다.
 - `backend/src/main/resources/db/migration/V2__add_session_table.sql`
   Flyway 마이그레이션을 추가했습니다.
   - 이미 적용된 V1은 수정하지 않고 새 버전 파일로 추가했습니다.
@@ -103,9 +103,9 @@ P-bit 맥락 예시:
 | 지표 | Before | After | 변화 |
 |---|---|---|---|
 | 형식 요소 판정 정확도 | 0.71 | 0.83 | +0.12 |
-| `/diagnosis` p95 응답 지연 | 1,200ms | 950ms | -250ms |
+| `/v1/analyze` p95 응답 지연 | 1,200ms | 950ms | -250ms |
 
-측정 조건: 테스트셋 50건, gpt-4o-mini, 로컬 MacBook M1
+측정 조건: 테스트셋 50건, 판정 모델(`LLM_MODEL_JUDGE`) 식별자, `rubric_version` v1.0, 로컬 MacBook M1
 -->
 
 | 지표 | Before | After | 변화 |

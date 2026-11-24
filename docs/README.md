@@ -1,0 +1,82 @@
+# 문서 안내 — `docs/`
+
+> 담당: 팀 공통 · 최종 수정: 2026-11-20
+
+---
+
+## 1. 디렉터리 구분
+
+| 디렉터리 | 담는 것 |
+| --- | --- |
+| `planning/` | 기획 — 제품 요구사항 |
+| `dev/specs/` | **파트 사이의 계약** — 아키텍처, LLM ↔ 백엔드 인터페이스, API, ERD. 바꾸면 다른 파트가 깨지는 문서 |
+| `dev/llm/` | LLM 파트 설계 — 스택, 채점 엔진 구조, 레벨·지표·루브릭 |
+| `dev/design/` | 파트별 기술 기획서 원본. 내용은 `specs/`·`llm/`·`ops/`로 옮기는 중 |
+| `dev/ai/` | AI 협업 도구(Claude Code 등) 워크플로 프롬프트 |
+| `ops/` | 운영 — 배포 절차, 환경변수 |
+| `adr/` | 되돌리기 어려운 결정의 기록 (Architecture Decision Record) |
+| `brand/` | 브랜딩·카피 가이드 |
+| `assets/` | 문서에 쓰는 이미지 등 |
+
+---
+
+## 2. 문서 목록
+
+상태: **작성됨** 본문이 있고 현재 기준으로 쓰는 문서 · **초안** 본문은 있으나 관련 파트 확정 전 · **뼈대** 제목만 있음 · **템플릿** 복사해서 쓰는 양식
+
+| 문서 | 다루는 것 | 담당 | 상태 |
+| --- | --- | --- | --- |
+| `planning/prd.md` | 제품 요구사항 | 팀 | 뼈대 |
+| `dev/specs/architecture.md` | 전체 서비스·인프라 구성, 백엔드 아키텍처 | 클라우드 · 백엔드 | 작성됨 |
+| `dev/specs/interfaces.md` | Spring Boot ↔ FastAPI 계약 — 엔드포인트·스키마·에러·타임아웃·멱등성·표기 변환 | 백엔드 · LLM 공동 | 초안 |
+| `dev/specs/api.md` | 클라이언트 ↔ Spring Boot API (`/api/v1`) | 백엔드 | 뼈대 |
+| `dev/specs/erd.md` | DB 테이블·관계·설계 의도 | 백엔드 | 뼈대 |
+| `dev/llm/llm-tech-spec.md` | AI 서버 스택과 선택 근거 | LLM | 작성됨 |
+| `dev/llm/system-design.md` | 서비스 정의·6요소·3모드·엔진 구성·LLM 호출 수·로그 필드 | LLM | 작성됨 |
+| `dev/llm/model-design.md` | 레벨·지표 계산, 루브릭, 문장 템플릿, 모호표현, 조립 제약, 신뢰도 검증 | LLM | 작성됨 |
+| `dev/design/backend-tech-spec.md` | 백엔드 기술 기획서 원본 | 백엔드 | 뼈대 |
+| `dev/design/frontend-tech-spec.md` | 프론트엔드 기술 기획서 원본 | 프론트 | 뼈대 |
+| `dev/design/cloud-tech-spec.md` | 클라우드 기술 기획서 원본 | 클라우드 | 뼈대 |
+| `dev/ai/prompts/` | AI 협업 워크플로 프롬프트 | LLM | 비어 있음 |
+| `ops/deploy.md` | CI/CD 파이프라인과 롤백 절차 | 클라우드 | 작성됨 |
+| `ops/env.md` | 서비스별 `.env` 키, GitHub Secrets | 클라우드 (2절 AI 서버: LLM) | 작성됨 |
+| `adr/0000-template.md` | ADR 작성 양식 | 팀 | 템플릿 |
+| `brand/branding.md` | 브랜딩 가이드 | 디자인 | 뼈대 |
+
+---
+
+## 3. 주제별 문서 위치
+
+| 궁금한 것 | 문서 |
+| --- | --- |
+| AI 서버 엔드포인트, 요청·응답 JSON, 에러 코드 | `dev/specs/interfaces.md` 3장 |
+| Spring이 AI 서버를 부를 때 타임아웃·재시도·헤더 | `dev/specs/interfaces.md` 4–5장 |
+| `snake_case` ↔ `camelCase`, 열거형 대소문자 변환 | `dev/specs/interfaces.md` 7장 |
+| 레벨이 어떻게 정해지나, 세분화율은 무엇인가 | `dev/llm/model-design.md` 1–2장 |
+| 6요소가 무엇이고 어떻게 판정하나 | `dev/llm/system-design.md` 1.3 · `dev/llm/model-design.md` 3–4장 |
+| DB 컬럼 | `backend/src/main/resources/db/migration/` (Flyway) |
+| 서버·네트워크 구성 | `dev/specs/architecture.md` |
+| 환경변수 키 이름 | `ops/env.md` |
+| 배포·롤백 | `ops/deploy.md` |
+
+---
+
+## 4. 작성 규칙
+
+1. **머리말.** 제목 아래에 담당과 최종 수정일을 적는다. 다른 문서에서 옮겨 왔으면 출처도 적는다.
+
+    ```markdown
+    # 문서 제목
+
+    > 담당: 파트(이름) · 최종 수정: YYYY-MM-DD
+    > 출처: 원본 문서 · 절
+    ```
+
+2. **같은 내용은 한 곳에만.** 문서끼리 값이 어긋나는 것을 막기 위해 겹치는 내용은 한 문서에 쓰고 다른 문서는 링크한다. 
+3. **코드가 기준인 값은 코드를 가리킨다.** DB 컬럼의 기준은 Flyway 마이그레이션, 환경변수 키의 기준은 각 서비스 폴더의 `.env.example`이다. 문서에는 설계 의도와 설명을 쓴다.
+4. **비밀값의 실제 값은 쓰지 않는다.** 키 이름과 설명만 쓴다 (`ops/env.md` 0절).
+5. **계약 문서(`dev/specs/`)는 문서를 먼저 고친다.** 구현을 바꾸기 전에 문서를 고치고 관련 파트의 확인을 받는다.
+6. **다른 파트 문서는 상의 후 수정한다.** 고칠 때는 담당자를 리뷰어로 넣고, PR "리뷰어에게"에 이유를 적는다 (`CONTRIBUTING.md` 7절).
+7. **커밋 scope.** 파트 소유 문서는 그 파트 scope(`llm`, `be`, `infra` 등), 팀 공통 문서는 `docs`를 쓴다 (`CONTRIBUTING.md` 1.3).
+8. **되돌리기 어려운 결정은 ADR로 남긴다.** `adr/0000-template.md`를 복사해 번호를 붙인다.
+9. **문서를 추가하거나 뼈대를 채우면 이 README의 2장도 같이 고친다.**
