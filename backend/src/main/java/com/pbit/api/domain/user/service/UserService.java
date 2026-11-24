@@ -16,14 +16,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
-    public UserMeResponse getUserMe(UUID userId) {
+	@Transactional(readOnly = true)
+	public UserMeResponse getUserMe(UUID userId) {
 
-        User user = userRepository.findById(userId)
-                .filter(found -> !found.isDeleted())
-                .orElseThrow(()-> new BusinessException(ErrorCode.TOKEN_INVALID));
-        return UserMeResponse.from(user);
-    }
+		User user = userRepository.findById(userId)
+				.filter(found -> !found.isDeleted())
+				.orElseThrow(()-> new BusinessException(ErrorCode.TOKEN_INVALID));
+		return UserMeResponse.from(user);
+	}
 }
