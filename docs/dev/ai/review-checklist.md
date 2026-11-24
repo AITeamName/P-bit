@@ -1,12 +1,13 @@
 # 리뷰 체크리스트
 
-> 담당: AI 협업 도구 (파트별 섹션은 각 파트 확인) · 최종 수정: 2026-11-22
+> 담당: AI 협업 도구 (파트별 섹션은 각 파트 확인) · 최종 수정: 2026-11-25
 
 자체 리뷰(`prompts/40-review.md` A), 리뷰 보조(B), 사람이 하는 리뷰가 같이 쓰는 기준이다. 커밋 전 확인(`prompts/30-implement.md`)에도 쓴다.
 
 - 항목마다 무엇을 어디와 비교할지만 적는다. 판정 기준은 근거 문서에 있다.
 - PR 템플릿의 셀프 체크리스트(`.github/pull_request_template.md`)는 여기에 다시 적지 않는다. PR 본문에서 따로 체크한다.
 - `AGENTS.md` 파일은 영어로 작성돼 있다. 아래 `AGENTS.md` 참조는 영어 절 제목 그대로 검색하면 된다.
+    - `backend/AGENTS.md`는 백엔드가 한국어로 작성했다. 백엔드 섹션은 한국어 절 제목을 쓴다.
 
 ## 판정
 
@@ -90,13 +91,13 @@
 
 | # | 확인 | 근거 |
 | --- | --- | --- |
-| BE1 | 패키지 위치와 계층 호출 방향이 규칙과 맞다 | `backend/AGENTS.md` > `2. Structure`, `3. Rules` > `Layers` |
-| BE2 | 엔티티를 응답으로 직접 반환하지 않고 응답 DTO(`record`)로 바꾼다 | `backend/AGENTS.md` > `3. Rules` > `DTOs` |
-| BE3 | 예외는 `BusinessException(ErrorCode)`만 쓰고, 새 에러 코드는 명세에 먼저 추가했다 | `backend/AGENTS.md` > `3. Rules` > `Errors` |
-| BE4 | 인증 규칙(토큰 내용, Refresh 회전, 소유자 검증)을 지킨다 | `backend/AGENTS.md` > `3. Rules` > `JWT and auth` |
-| BE5 | 스키마 변경은 새 Flyway 버전 파일이다. 적용된 `V*.sql`을 고치지 않았다 | `backend/AGENTS.md` > `3. Rules` > `Schema changes (Flyway)` |
-| BE6 | 시간 타입은 `Instant`, 판정 로그에 `rubric_version`·`domain`·`language`가 있다 | `backend/AGENTS.md` > `3. Rules` > `DB` |
-| BE7 | AI 서버 호출과 snake_case ↔ camelCase 변환은 `infra/ai` 한 곳에서 하고, DB 트랜잭션 밖에서 호출한다 | `docs/dev/specs/interfaces.md` > `7`, `backend/AGENTS.md` > `3. Rules` |
+| BE1 | 패키지 위치와 계층 호출 방향이 규칙과 맞다 | `backend/AGENTS.md` > `패키지 구조`, `계층 규칙` |
+| BE2 | 엔티티를 응답으로 직접 반환하지 않고 응답 DTO(`record`)로 바꾼다 | `backend/AGENTS.md` > `DTO` |
+| BE3 | 예외는 `BusinessException(ErrorCode)`만 쓰고, 새 에러 코드는 명세에 먼저 추가했다 | `backend/AGENTS.md` > `에러 처리` |
+| BE4 | 인증 규칙(토큰 내용, Refresh 회전, 소유자 검증)을 지킨다 | `backend/AGENTS.md` > `JWT·인증` |
+| BE5 | 스키마 변경은 새 Flyway 버전 파일이다. 적용된 `V*.sql`을 고치지 않았다 | `backend/AGENTS.md` > `DB` > `스키마 변경 (Flyway)` |
+| BE6 | 시간 타입은 `Instant`, 판정 로그에 `rubric_version`·`domain`·`language`가 있다 | `backend/AGENTS.md` > `DB` > `타입` |
+| BE7 | AI 서버 호출과 snake_case ↔ camelCase 변환은 `infra/ai` 한 곳에서 하고, DB 트랜잭션 밖에서 호출한다 | `docs/dev/specs/interfaces.md` > `7`, `backend/AGENTS.md` > `계층 규칙`, `DTO` |
 
 ### FE. 프론트엔드 (`frontend/`)
 
