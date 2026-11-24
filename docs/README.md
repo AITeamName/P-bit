@@ -1,6 +1,6 @@
 # 문서 안내 — `docs/`
 
-> 담당: 팀 공통 · 최종 수정: 2026-11-22
+> 담당: 팀 공통 · 최종 수정: 2026-11-25
 
 ---
 
@@ -28,8 +28,8 @@
 | `planning/mvp.md` | MVP 목표·우선순위·기능별 완료 기준·데모 시나리오·파트별 산출물 | PM | 작성됨 |
 | `dev/specs/architecture.md` | 전체 서비스·인프라 구성, 백엔드 아키텍처 | 클라우드 · 백엔드 | 작성됨 |
 | `dev/specs/interfaces.md` | Spring Boot ↔ FastAPI 계약 — 엔드포인트·스키마·에러·타임아웃·멱등성·표기 변환 | 백엔드 · LLM 공동 | 초안 |
-| `dev/specs/api.md` | 클라이언트 ↔ Spring Boot API (`/api/v1`) | 백엔드 | 뼈대 |
-| `dev/specs/erd.md` | DB 테이블·관계·설계 의도·모드별 적재 규칙 | 백엔드 | 초안 |
+| `dev/specs/api.md` | 클라이언트 ↔ Spring Boot API (`/api/v1`) 공통 규칙 — 인증·에러 형식·에러 코드. 엔드포인트별 명세는 Swagger | 백엔드 | 작성됨 |
+| `dev/specs/erd.md` | DB 테이블·관계·설계 의도·모드별 적재 규칙 | 백엔드 | 작성됨 |
 | `dev/llm/llm-tech-spec.md` | AI 서버 스택과 선택 근거 | LLM | 작성됨 |
 | `dev/llm/system-design.md` | 서비스 정의·6요소·3모드·엔진 구성·LLM 호출 수·로그 필드 | LLM | 작성됨 |
 | `dev/llm/model-design.md` | 레벨·지표 계산, 루브릭, 문장 템플릿, 모호표현, 조립 제약, 신뢰도 검증 | LLM | 작성됨 |
