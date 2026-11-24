@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pbit.api.domain.auth.dto.AvailabilityResponse;
-import com.pbit.api.domain.auth.dto.SignupRequest;
-import com.pbit.api.domain.auth.dto.SignupResponse;
+import com.pbit.api.domain.auth.dto.request.LoginRequest;
+import com.pbit.api.domain.auth.dto.request.SignupRequest;
+import com.pbit.api.domain.auth.dto.response.AvailabilityResponse;
+import com.pbit.api.domain.auth.dto.response.LoginResponse;
+import com.pbit.api.domain.auth.dto.response.SignupResponse;
+import com.pbit.api.domain.auth.service.LoginResult;
+import com.pbit.api.domain.auth.service.LoginService;
 import com.pbit.api.domain.auth.service.SignupResult;
 import com.pbit.api.domain.auth.service.SignupService;
 import com.pbit.api.domain.user.validation.UserRules;
@@ -40,6 +44,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
 	private final SignupService signupService;
+	private final LoginService loginService;
 	private final RefreshTokenCookieFactory refreshTokenCookieFactory;
 
 	@Operation(summary = "회원가입", description = "이메일 자체 가입 + 약관 동의 저장 + 토큰 발급 (WEB-JOIN-01, 02)")
@@ -84,6 +89,22 @@ public class AuthController {
 		@Pattern(regexp = UserRules.NICKNAME_PATTERN, message = UserRules.NICKNAME_MESSAGE) String nickname
 	) {
 		return new AvailabilityResponse(signupService.isNicknameAvailable(nickname));
+	}
+
+	@Operation(summary = "로그인", description = "이메일 로그인 + 토큰 발급 (WEB-AUTH-01)")
+	@SecurityRequirements
+	@ApiResponse(responseCode = "200", description = "로그인 성공. refresh 토큰은 Set-Cookie로 발급",
+		headers = @Header(name = HttpHeaders.SET_COOKIE, description = "refresh_token=...; Path=/api/v1/auth; HttpOnly; SameSite=Lax"))
+	@ApiResponse(responseCode = "400", description = "VALIDATION_ERROR 이메일·비밀번호 누락",
+		content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+	@ApiResponse(responseCode = "401", description = "INVALID_CREDENTIALS 이메일·비밀번호 불일치 (원인을 구분하지 않음)",
+		content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+	@PostMapping("/login")
+	public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+		LoginResult result = loginService.login(request);
+		return ResponseEntity.ok()
+			.header(HttpHeaders.SET_COOKIE, refreshTokenCookieFactory.create(result.refreshToken()).toString())
+			.body(LoginResponse.from(result));
 	}
 
 }
