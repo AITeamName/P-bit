@@ -1,4 +1,4 @@
-package com.pbit.api.domain.term.dto;
+package com.pbit.api.domain.term.dto.response;
 
 import com.pbit.api.domain.term.entity.Term;
 import com.pbit.api.domain.term.entity.TermCode;

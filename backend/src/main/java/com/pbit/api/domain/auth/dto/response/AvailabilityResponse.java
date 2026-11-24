@@ -1,4 +1,4 @@
-package com.pbit.api.domain.auth.dto;
+package com.pbit.api.domain.auth.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

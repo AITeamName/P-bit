@@ -30,8 +30,8 @@ jobs:
       web: ${{ steps.filter.outputs.web }}
       # ext: ${{ steps.filter.outputs.ext }}        # frontend/extension 코드가 생기면 주석 해제
     steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
+      - uses: actions/checkout@v7
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
@@ -82,15 +82,18 @@ jobs:
       JWT_SECRET: ci-only-dummy-secret-at-least-32-characters-long
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
 
       # Gradle 캐시 (두 번째 실행부터 빨라짐)
-      - uses: gradle/actions/setup-gradle@v4
+      # cache-provider: basic → 오픈소스(MIT) 캐시 사용. v6 기본값(enhanced)은 별도 이용약관이 적용되는 상용 구성요소
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
 
       # Mac/Windows에서 커밋하면 실행 권한이 빠지는 경우가 있어 보정
       - name: Make gradlew executable
@@ -102,7 +105,7 @@ jobs:
       # 테스트가 실패하면 리포트를 내려받을 수 있게 업로드
       - name: Upload test report
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backend-test-report
           path: backend/build/reports/tests/
@@ -121,10 +124,10 @@ jobs:
     env:
       VITE_API_BASE_URL: http://localhost:8080/api/v1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      # Node 버전은 frontend/web/.nvmrc(20.19)를 그대로 따른다 → 로컬과 CI가 같은 버전
-      - uses: actions/setup-node@v4
+      # Node 버전은 frontend/web/.nvmrc를 그대로 따른다 → 로컬과 CI가 같은 버전
+      - uses: actions/setup-node@v7
         with:
           node-version-file: frontend/web/.nvmrc
           cache: npm

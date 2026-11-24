@@ -35,7 +35,7 @@ public class SecurityConfig {
 						.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/actuator/health", "/error").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/v1/terms", "/api/v1/terms/*").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/v1/auth/check-email", "/api/v1/auth/check-nickname").permitAll()
-						.requestMatchers(HttpMethod.POST, "/api/v1/auth/signup").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/v1/auth/signup", "/api/v1/auth/login").permitAll()
 						.anyRequest().authenticated())
 				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling(exception -> exception
