@@ -123,3 +123,4 @@ Text that leaves the repository — issue bodies, PR bodies, review comments, re
 
 - After saving, give the path. When the user has reviewed or edited the file and approves registration, register the file content as it is.
 - Where files cannot be written (such as a web chat), output the same content as a Markdown code block.
+- In text posted to GitHub, write numbered document items as `N번` (for example, `미결정 9번`), not `#N`. GitHub turns `#N` into a link to issue or PR N.
