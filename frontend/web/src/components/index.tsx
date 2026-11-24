@@ -4,14 +4,11 @@ import { useId } from 'react' // 겹치지 않는 고유 id를 만드는 React �
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, InputHTMLAttributes } from 'react'
 import './components.css'
 
-// 로딩 스피너 (16px, SVG 이미지를 계속 회전시킴)
+// 로딩 스피너 (16px, 계속 회전)
+// 모양은 SVG 이미지를 마스크로 쓰고 색은 색상 변수로 칠함 (색상 변수를 바꾸면 스피너 색도 같이 바뀜)
 // 보라색 바탕 위에서는 'on-purple'(Purple/100), 밝은 바탕 위에서는 'on-light'(Purple/500)
-const SPINNER_SRC = {
-  'on-purple': '/icons/spinner-purple-100.svg',
-  'on-light': '/icons/spinner-purple-500.svg',
-}
-export function Spinner({ tone }: { tone: keyof typeof SPINNER_SRC }) {
-  return <img className="spinner" src={SPINNER_SRC[tone]} alt="" />
+export function Spinner({ tone }: { tone: 'on-purple' | 'on-light' }) {
+  return <span className={`spinner spinner-${tone}`} aria-hidden="true" />
 }
 
 // 버튼이 받는 값 (기본 버튼 속성 + 로딩 + 크기와 모양)

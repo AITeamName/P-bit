@@ -78,11 +78,16 @@
 }
 
 /* ===== 로딩 스피너 (16px) ===== */
+/* 스피너 모양 이미지(spinner.svg)를 마스크로 쓰고 색은 색상 변수로 칠함 (이미지 색은 쓰지 않음) */
 .spinner {
+  display: inline-block;
   width: 16px;
   height: 16px;
+  mask: url('/icons/spinner.svg') center / 16px 16px no-repeat;
   animation: spinner-rotate 0.8s linear infinite; /* 계속 회전 */
 }
+.spinner-on-purple { background: var(--purple-100); } /* 보라색 바탕 위 */
+.spinner-on-light { background: var(--purple-500); } /* 밝은 바탕 위 */
 @keyframes spinner-rotate {
   to { transform: rotate(360deg); }
 }
