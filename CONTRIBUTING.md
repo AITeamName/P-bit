@@ -67,12 +67,12 @@ scope는 변경한 파일의 **담당 파트**입니다. 문서인지 코드인�
 
 | 파트 | scope | 코드·설정 | 문서 |
 | --- | --- | --- | --- |
-| 백엔드 (Spring Boot) | `be` | `backend/` | `docs/dev/design/backend-tech-spec.md` |
+| 백엔드 (Spring Boot) | `be` | `backend/` | |
 | LLM 서버 (FastAPI) | `llm` | `ai-server/` | `docs/dev/llm/` |
 | 웹 프론트엔드 | `web` | `frontend/web/` | |
 | 크롬 익스텐션 | `ext` | `frontend/extension/` | |
-| 프론트엔드 공통 | `fe` | `frontend/` 공통 (`AGENTS.md`, `CLAUDE.md` 등) | `docs/dev/design/frontend-tech-spec.md` |
-| 인프라·CI/CD | `infra` | `docker-compose.yml`, `.github/workflows/` | `docs/ops/`, `docs/dev/design/cloud-tech-spec.md` |
+| 프론트엔드 공통 | `fe` | `frontend/` 공통 (`AGENTS.md`, `CLAUDE.md` 등) | |
+| 인프라·CI/CD | `infra` | `docker-compose.yml`, `.github/workflows/` | `docs/ops/` |
 | 디자인 | `de` | | `docs/brand/` |
 | AI 협업 도구 | `ai` | 루트 `CLAUDE.md`, `.claude/`, `.mcp.json` | `docs/dev/ai/` |
 | 레포 설정 | `repo` | `.gitignore`, 루트 `.env.example`, `.github/CODEOWNERS`, `.github/pull_request_template.md`, 폴더 구조 | |
