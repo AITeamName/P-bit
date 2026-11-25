@@ -157,12 +157,12 @@ scope는 변경한 파일의 **담당 파트**입니다. 파트 소유 문서도
 
 | Scope | 대상 |
 | --- | --- |
-| `be` | `backend/`, 백엔드 기술 명세 |
+| `be` | `backend/` |
 | `llm` | `ai-server/`, `docs/dev/llm/` |
 | `web` | `frontend/web/` |
 | `ext` | `frontend/extension/` |
-| `fe` | `frontend/` 공통, 프론트엔드 기술 명세 |
-| `infra` | `docker-compose.yml`, `.github/workflows/`, `docs/ops/`, 클라우드 기술 명세 |
+| `fe` | `frontend/` 공통 |
+| `infra` | `docker-compose.yml`, `.github/workflows/`, `docs/ops/` |
 | `de` | `docs/brand/` |
 | `ai` | 루트 `CLAUDE.md`, `.claude/`, `.mcp.json`, `docs/dev/ai/` |
 | `repo` | `.gitignore`, 루트 `.env.example`, `.github/CODEOWNERS`, PR 템플릿 |
