@@ -1,6 +1,6 @@
 # AI 협업 가이드
 
-> 담당: AI 협업 도구 · 최종 수정: 2026-11-22
+> 담당: AI 협업 도구 · 최종 수정: 2026-11-26
 
 AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 할 때 필요한 파일 구조, 단계별 프롬프트 사용법, Jira·GitHub 연결 방법을 적는다. AI가 따르는 규칙 자체는 루트 `AGENTS.md`에 있다.
 
@@ -19,15 +19,15 @@ AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 �
 | --- | --- | --- |
 | `AGENTS.md` | 모든 도구 | AI 작업 규칙 원본 |
 | `CLAUDE.md` | Claude Code | `@AGENTS.md`로 규칙을 불러오고, Claude Code 전용 규칙만 추가 |
-| `backend/`·`frontend/`·`ai-server/`의 `AGENTS.md` | 모든 도구 | 그 폴더의 기술 규칙 (스택, 구조, 커밋 전 루틴) |
+| `backend/`·`frontend/`·`ai-server/`의 `AGENTS.md` | 모든 도구 | 그 폴더의 기술 규칙 (스택, 구조, 커밋 전 확인 명령) |
 | 같은 폴더의 `CLAUDE.md` | Claude Code | 그 폴더 `AGENTS.md`를 불러옴 |
 | `.mcp.json` | Claude Code | Jira·GitHub MCP 서버 (저장소 공유) |
-| `.claude/settings.json` | Claude Code | push·Jira 이슈 생성·PR 생성 전 확인 창 |
+| `.claude/settings.json` | Claude Code | 실행 전 확인 창 대상 (`AGENTS.md` > `0. Absolute rules` > `Approval` 표에서 승인 창이 "Yes"인 행동) |
 | `docs/dev/ai/prompts/` | 모든 도구 | 단계별 프롬프트 7종 |
 | `docs/dev/ai/review-checklist.md` | 모든 도구, 사람 | 리뷰 기준 |
 | `docs/dev/ai/jira-guide.md` | 모든 도구, 사람 | Jira 이슈 양식 |
 
-- AI 규칙을 바꿀 때는 `AGENTS.md`만 고친다.
+- 공통 AI 규칙은 `AGENTS.md`에만 둔다. `CLAUDE.md`에는 Claude Code 전용 규칙만 둔다.
 - 개인 지시는 각자 `CLAUDE.local.md`에 둔다. 커밋되지 않는다.
 
 ---
@@ -42,7 +42,7 @@ AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 �
 | Codex 등 다른 코딩 도구 | 위와 같다. `AGENTS.md`는 도구가 읽는다 | 도구에 따라 다르다. MCP는 각자 설정 |
 | claude.ai 웹 채팅 | 프롬프트 파일을 프로젝트 지식에 넣어 두거나 붙여 넣는다 (§6) | 글 작성·분석만. 파일 수정·git은 사람이 한다 |
 
-- 터미널에서 사람이 직접 하는 일은 따로 있다: 커밋·push, 환경변수 등록, MCP 설정.
+- 환경변수 등록과 MCP 설정은 사람이 터미널에서 직접 한다. 커밋·push는 AI가 대화 승인을 받은 뒤 하거나 사람이 직접 한다 (`AGENTS.md` > `0. Absolute rules` > `Approval`).
 
 ---
 
@@ -69,7 +69,7 @@ AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 �
 ```
 
 - 각 단계는 결과를 낸 뒤 사람의 승인을 기다린다. AI가 다음 단계로 스스로 넘어가지 않는다.
-- push, Jira 이슈 등록, PR 등록, 리뷰 코멘트 등록은 사람이 승인하거나 직접 한다.
+- push, Jira 이슈 등록·수정, PR 등록, 답글 등록은 사람이 승인하거나 직접 한다. 리뷰·승인·변경 요청과 PR 머지는 사람이 직접 한다. 기준은 `AGENTS.md` > `0. Absolute rules` > `Approval` 표.
 
 ### 3.2 프롬프트별 요청 방법
 
@@ -108,7 +108,7 @@ AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 �
 
 | 글 | 파일 |
 | --- | --- |
-| Jira 이슈 본문 | `.claude/drafts/KAN-<번호>-issue.md` |
+| Jira 이슈 본문 | `.claude/drafts/KAN-<번호>-issue.md` (번호가 없는 신규: `KAN-new-<요약>-issue.md`) |
 | PR 본문 | `.claude/drafts/KAN-<번호>-pr.md` |
 | PR 리뷰 코멘트 초안 | `.claude/drafts/PR-<번호>-review.md` |
 | 리뷰 답글·반영 결과 | `.claude/drafts/PR-<번호>-feedback.md` |
@@ -205,7 +205,9 @@ claude mcp remove github --scope local
 ```
 
 - 이 명령은 토큰 값을 개인 설정 파일(`~/.claude.json`)에 저장한다. 되돌리면 함께 지워진다.
-- 로컬 Docker 실행에는 원격 서버의 읽기 전용 헤더가 적용되지 않는다. 쓰기 도구는 `.claude/settings.json`의 승인 창 목록으로 막힌다.
+- 로컬 Docker 실행에는 원격 서버의 읽기 전용 헤더가 적용되지 않아 GitHub MCP 쓰기 도구가 열린다.
+    - `.claude/settings.json`에서 확인 창이 뜨는 것은 push·파일 수정·PR 생성·PR 머지 도구뿐이다. 코멘트·리뷰 등 나머지 쓰기 도구는 확인 창 없이 실행될 수 있다.
+    - 그래도 GitHub 쓰기는 `gh`로만 한다 (`AGENTS.md` > `0. Absolute rules`).
 - 버전을 올릴 때는 태그(`v2.2.0`)만 바꿔 다시 추가한다.
 
 ### 5.5 실패할 때

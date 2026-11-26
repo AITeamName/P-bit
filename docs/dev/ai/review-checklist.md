@@ -1,6 +1,6 @@
 # 리뷰 체크리스트
 
-> 담당: AI 협업 도구 (파트별 섹션은 각 파트 확인) · 최종 수정: 2026-11-25
+> 담당: AI 협업 도구 (파트별 섹션은 각 파트 확인) · 최종 수정: 2026-11-26
 
 자체 리뷰(`prompts/40-review.md` A), 리뷰 보조(B), 사람이 하는 리뷰가 같이 쓰는 기준이다. 커밋 전 확인(`prompts/30-implement.md`)에도 쓴다.
 
@@ -18,11 +18,11 @@
 | 해당 없음 | 이유를 적는다 |
 | 미확인 | 확인하지 못했다. 통과로 바꾸지 않는다 |
 
-- 미통과가 0건이어야 PR을 만든다.
+- 미통과가 0건이어야 PR을 만든다. 자체 리뷰(A)는 PR을 만들기 전에 한다. PR에서만 볼 수 있는 항목(A4·A5)은 PR 초안으로 확인한다.
 
 ## 적용 범위
 
-1. `git diff --stat <base>...HEAD`로 바뀐 경로를 본다 (일반 PR은 `develop`, Stack PR은 선행 브랜치).
+1. `git fetch origin` 후 `git diff --stat origin/<base>...HEAD`로 바뀐 경로를 본다 (`<base>`는 일반 PR이면 `develop`, Stack PR이면 선행 브랜치). 로컬 브랜치를 쓰면 오래된 경우 다른 PR의 변경이 섞인다.
 2. 경로로 파트를 판별한다 (`CONTRIBUTING.md` > `1.3 Scope 정의`).
 3. 공통 섹션(A~E)은 항상 적용한다. 파트 섹션은 그 파트 파일이 바뀌었을 때 적용한다.
 
@@ -36,9 +36,9 @@
 | --- | --- | --- | --- |
 | A1 | 이슈 범위 밖 파일 변경이 없다. 있으면 PR `💬 리뷰어에게`에 사유가 있다 | `git diff --stat` ↔ 이슈 작업 내용 | `AGENTS.md` > `3. Scope and prohibitions` |
 | A2 | 다른 파트 소유 파일을 바꿨다면 그 파트 확인 요청이 있다 | 바뀐 경로 ↔ scope 표, `.github/CODEOWNERS` | `CONTRIBUTING.md` > `1.3 Scope 정의` |
-| A3 | 커밋 메시지가 규칙을 따르고, 한 커밋에 한 scope다 | `git log --oneline <base>..HEAD` | `CONTRIBUTING.md` > `2. 커밋 규칙` |
-| A4 | 브랜치 이름과 PR 제목에 같은 `KAN-번호`가 있다 | 브랜치 이름, PR 제목 | `CONTRIBUTING.md` > `1.2 브랜치 네이밍`, `4.2 PR 제목` |
-| A5 | Stack PR(base가 `develop`이 아님)이면 `🧱 stack` 라벨이 있다 | PR 라벨 | `CONTRIBUTING.md` > `4.6 PR 본문 작성` |
+| A3 | 커밋 메시지가 규칙을 따르고, 한 커밋에 한 scope다 | `git log --oneline --no-merges origin/<base>..HEAD` (develop 반영 merge 커밋 제외) | `CONTRIBUTING.md` > `2. 커밋 규칙 (Conventional Commits)` |
+| A4 | 브랜치 이름과 PR 제목에 같은 `KAN-번호`가 있다 | 브랜치 이름, PR 제목 (등록 전이면 PR 초안의 제목) | `CONTRIBUTING.md` > `1.2 브랜치 네이밍`, `4.2 PR 제목` |
+| A5 | Stack PR(base가 `develop`이 아님)이면 `🧱 stack` 라벨이 있다 | PR 라벨 (등록 전이면 PR 초안의 라벨) | `CONTRIBUTING.md` > `4.6 PR 본문 작성` |
 
 ### B. 계약·문서
 
@@ -54,16 +54,22 @@
 
 | # | 확인 | 방법 | 근거 |
 | --- | --- | --- | --- |
-| C1 | 코드·설정·테스트·문서에 비밀값이 없다 | `git diff <base>...HEAD \| grep -nE "password=\|api_key=\|_TOKEN=\|ghp_\|github_pat_\|ATATT\|BEGIN.*PRIVATE"` | `AGENTS.md` > `0. Absolute rules` |
+| C1 | 코드·설정·테스트·문서에 비밀값이 없다 | 아래 명령 (결과가 없어야 통과) | `AGENTS.md` > `0. Absolute rules` |
 | C2 | `.env` 파일이 커밋되지 않았다. 새 키는 `.env.example`에 이름만 있다 | `git diff --stat` | `docs/ops/env.md` |
 | C3 | 사용자 프롬프트 원문(`prompt_text`)이 로그·에러 응답에 남지 않는다 | 로그·예외 처리 코드 | `docs/dev/specs/interfaces.md` > `1.2` |
+
+C1 명령:
+
+```bash
+git diff origin/<base>...HEAD | grep -nE "password=|api_key=|_TOKEN=|ghp_|github_pat_|ATATT|BEGIN.*PRIVATE"
+```
 
 ### D. 테스트·빌드
 
 | # | 확인 | 방법 | 근거 |
 | --- | --- | --- | --- |
-| D1 | 바뀐 파트의 커밋 전 루틴이 통과한다 | 각 파트 `AGENTS.md` > `1. Stack and commands`의 명령 | 파트 `AGENTS.md` |
-| D2 | 정상 경로와 예외 경로 테스트가 있다 | 테스트 목록 | 파트 `AGENTS.md` > `4. Tests` |
+| D1 | 바뀐 폴더의 커밋 전 확인 명령이 통과한다 | BE `명령어`, FE `1. Stack and commands (web)`, LLM `1. Stack and commands`의 명령. 폴더에 `AGENTS.md`가 없으면 해당 없음 | `AGENTS.md` > `3. Scope and prohibitions` |
+| D2 | 정상 경로와 예외 경로 테스트가 있다 | 테스트 목록 | 파트 `AGENTS.md`의 테스트 절 (BE `테스트`, FE·LLM `4. Tests`) |
 | D3 | PR 테스트 항목에 실제로 실행한 명령만 체크했다 | PR 본문 ↔ 실행한 명령 | `CONTRIBUTING.md` > `4.6 PR 본문 작성` |
 
 ### E. 문서·AI 산출물
@@ -121,7 +127,7 @@
 | LLM5 | 사용자에게 보이는 문장은 템플릿 + 변수 주입이다 | `ai-server/AGENTS.md` > `3. Rules` > `Sentences` |
 | LLM6 | 조립 제약과 재생성 횟수를 지킨다 | `ai-server/AGENTS.md` > `3. Rules` > `Assembly` |
 | LLM7 | 모델·타임아웃·재시도는 환경변수로 받는다 | `ai-server/AGENTS.md` > `3. Rules` > `Config` |
-| LLM8 | 판정 로직·루브릭·모델을 바꿨다면 PR에 Before/After 측정값이 있다 (`perf`) | `CONTRIBUTING.md` > `2. 커밋 규칙`, PR 템플릿 측정 결과 |
+| LLM8 | 판정 로직·루브릭·모델을 바꿨다면 PR에 Before/After 측정값이 있다 (`perf`) | `CONTRIBUTING.md` > `2. 커밋 규칙 (Conventional Commits)`, PR 템플릿 측정 결과 |
 
 ### INFRA. 인프라 (`docker-compose.yml`, `.github/workflows/`, `docs/ops/`)
 

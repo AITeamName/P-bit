@@ -1,6 +1,6 @@
 # Jira 이슈 작성 가이드
 
-> 담당: AI 협업 도구 · 최종 수정: 2026-11-22
+> 담당: AI 협업 도구 · 최종 수정: 2026-11-26
 > 출처: Jira 이슈 작성 양식 (Notion)
 
 Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는다. 안 쓰는 항목은 지워도 된다. 개발이든 아니든 양식을 기준으로 쓴다.
@@ -157,7 +157,7 @@ Jira 이슈를 쓸 때 아래 양식을 복사해서 설명란에 붙여 넣는�
 - 예외: 이미 하위 작업으로 만들어진 이슈를 고칠 때, 또는 팀이 명시적으로 하위 작업을 요청했을 때만 다룬다.
     - 상위 이슈 키를 확인하고, 그 이슈가 실제로 있는지 조회한다.
     - 본문은 3장 또는 6장 양식을 쓰고, "의존성"에 상위 이슈를 적는다 (`- 상위: KAN-00 (상위 이슈 제목)`).
-    - 등록 시 필드: `issuetype: Subtask`, `parent: 상위 이슈 키`
+    - 등록: Jira MCP `jira_create_subtask` (`parentIssueKey`: 상위 이슈 키). 화면에서는 상위 이슈의 "하위 작업 만들기"
 - 한 이슈를 PR 여러 개로 나누면 작업 내용에 PR별 항목을 적는다 (예: `### PR ① …`, `### PR ② …`).
 
 ---
@@ -323,7 +323,7 @@ Critical / High / Medium / Low (하나만 남기기)
 
 | 도구 | 연결 | 등록 |
 | --- | --- | --- |
-| Claude Code | `.mcp.json`의 Jira MCP (`jira_get_issue` · `jira_create_issue` · `jira_update_issue`). 설정은 `docs/dev/ai/README.md` > `5. MCP·CLI 연결 (Claude Code)` | 초안 파일(`.claude/drafts/KAN-<번호>-issue.md`) 확인 → 승인 → 등록. 체크박스가 있으면 본문 전체를 ADF로 바꿔 `format: adf`로 보낸다. 생성은 실행 전 확인 창이 뜬다 |
+| Claude Code | `.mcp.json`의 Jira MCP (`jira_get_issue` · `jira_create_issue` · `jira_update_issue`). 설정은 `docs/dev/ai/README.md` > `5. MCP·CLI 연결 (Claude Code)` | 초안 파일(`.claude/drafts/KAN-<번호>-issue.md`) 확인 → 승인 → 등록. 체크박스가 있으면 본문 전체를 ADF로 바꿔 `format: adf`로 보낸다. 생성·수정·상태 변경·코멘트는 실행 전 확인 창이 뜬다 |
 | claude.ai 웹 채팅 | Atlassian 커넥터 (claude.ai → Settings → Connectors → Atlassian) | 초안 코드블록 확인 → 승인 → 등록. 커넥터가 없으면 직접 붙여 넣기. 등록 후 체크박스가 `[ ]` 글자로 보이면 Jira 화면에서 체크리스트로 바꾼다 |
 
 ADF 변환 규칙 (AI가 등록할 때)
