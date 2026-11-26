@@ -67,12 +67,12 @@ scope는 변경한 파일의 **담당 파트**입니다. 문서인지 코드인�
 
 | 파트 | scope | 코드·설정 | 문서 |
 | --- | --- | --- | --- |
-| 백엔드 (Spring Boot) | `be` | `backend/` | `docs/dev/design/backend-tech-spec.md` |
+| 백엔드 (Spring Boot) | `be` | `backend/` | |
 | LLM 서버 (FastAPI) | `llm` | `ai-server/` | `docs/dev/llm/` |
 | 웹 프론트엔드 | `web` | `frontend/web/` | |
 | 크롬 익스텐션 | `ext` | `frontend/extension/` | |
-| 프론트엔드 공통 | `fe` | `frontend/` 공통 (`AGENTS.md`, `CLAUDE.md` 등) | `docs/dev/design/frontend-tech-spec.md` |
-| 인프라·CI/CD | `infra` | `docker-compose.yml`, `.github/workflows/` | `docs/ops/`, `docs/dev/design/cloud-tech-spec.md` |
+| 프론트엔드 공통 | `fe` | `frontend/` 공통 (`AGENTS.md`, `CLAUDE.md` 등) | |
+| 인프라·CI/CD | `infra` | `docker-compose.yml`, `.github/workflows/` | `docs/ops/` |
 | 디자인 | `de` | | `docs/brand/` |
 | AI 협업 도구 | `ai` | 루트 `CLAUDE.md`, `.claude/`, `.mcp.json` | `docs/dev/ai/` |
 | 레포 설정 | `repo` | `.gitignore`, 루트 `.env.example`, `.github/CODEOWNERS`, `.github/pull_request_template.md`, 폴더 구조 | |
@@ -314,7 +314,7 @@ git commit -m "chore(scope): develop 병합 충돌 해결"
 - ❌ 다른 파트 폴더를 상의 없이 수정
 - ❌ `.env` 파일 커밋
 - ❌ API Key, 비밀번호 등 민감 정보 커밋
-- ❌ `ai-server/prompts/rubric/vN.yaml` 기존 파일 덮어쓰기 (버전업은 신규 파일 생성)
+- ❌ `ai-server/prompts/rubric/vN/` 이미 배포된 버전 디렉터리 수정 (버전업은 디렉터리를 새로 만든다. 상세: `docs/dev/llm/model-design.md` 4.1)
 
 ### ✅ 필수 수칙
 
