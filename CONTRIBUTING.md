@@ -319,7 +319,10 @@ Stack 후속 → 선행 브랜치 ✅ (선행 PR 머지 후 develop으로 변경
 | `main` → `develop` (역병합) | Merge commit |
 
 - `develop`은 저장소 설정상 Merge commit만 허용합니다.
-- 머지 조건: `ci-result` 체크 통과 + 승인 2명 이상 (`docs/ops/deploy.md` > `1. CI — 빌드·테스트 (사용 중)`).
+- 머지 조건: 아래를 모두 충족해야 합니다 (`docs/ops/deploy.md` > `1. CI — 빌드·테스트 (사용 중)`).
+    - `ci-result` 체크 통과
+    - 승인 2명 이상
+    - `.github/CODEOWNERS`에 등록된 경로를 바꿨다면 그 경로 소유자의 승인
 - PR 생성·Ready 전환·머지와 CI 결과는 Discord로 알림이 갑니다 (`.github/workflows/discord-notification.yml`). PR 본문에 CI 결과를 따로 적지 않습니다.
     - base가 `develop`·`main`이 아닌 Stack PR은 CI·알림 대상이 아닙니다.
 
