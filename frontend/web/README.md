@@ -4,7 +4,7 @@
 
 ## 요구 사항
 
-- Node.js 20.19 이상 (또는 22.12 이상)
+- Node.js 22.22 이상 (`.nvmrc`, `package.json` > `engines` 기준)
 
 ## 실행
 

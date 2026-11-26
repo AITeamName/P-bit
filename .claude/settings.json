@@ -2,5 +2,30 @@
     "enabledMcpjsonServers": [
         "github",
         "jira"
-  ]
+    ],
+    "permissions": {
+        "ask": [
+            "Bash(git push:*)",
+            "Bash(gh pr create:*)",
+            "Bash(git -C * push*)",
+            "Bash(gh pr merge:*)",
+            "Bash(gh api -X POST:*)",
+            "Bash(gh api -X PATCH:*)",
+            "Bash(gh api -X PUT:*)",
+            "Bash(gh api -X DELETE:*)",
+            "Bash(gh api * -X POST*)",
+            "Bash(gh api * -X PATCH*)",
+            "Bash(gh api * -X PUT*)",
+            "Bash(gh api * -X DELETE*)",
+            "mcp__github__push_files",
+            "mcp__github__create_or_update_file",
+            "mcp__github__create_pull_request",
+            "mcp__github__merge_pull_request",
+            "mcp__jira__jira_create_issue",
+            "mcp__jira__jira_create_subtask",
+            "mcp__jira__jira_update_issue",
+            "mcp__jira__jira_transition_issue",
+            "mcp__jira__jira_add_comment"
+        ]
+    }
 }
