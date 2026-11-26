@@ -16,7 +16,7 @@ In both modes, people make the decisions.
 
 ## Inputs
 
-- A: `git diff <base>...HEAD` — `develop` for a normal PR, the preceding branch for a Stack PR
+- A: run `git fetch origin` first, then `git diff origin/<base>...HEAD` — `<base>` is `develop` for a normal PR, the preceding branch for a Stack PR
 - B: the PR number, the PR body (especially `💬 리뷰어에게`), and the files and range the reviewer chose
 - `docs/dev/ai/review-checklist.md` and the documents each item points to
 
@@ -24,17 +24,17 @@ In both modes, people make the decisions.
 
 ### A. Self-review
 
-1. Look at the changed paths with `git diff --stat <base>...HEAD` and identify the parts (`CONTRIBUTING.md` > `1.3 Scope 정의`).
+1. Look at the changed paths with `git diff --stat origin/<base>...HEAD` and identify the parts (`CONTRIBUTING.md` > `1.3 Scope 정의`).
 2. Choose the checklist's common sections and the sections for those parts. For sections you do not apply, give the reason.
 3. For each item, open the grounds document and judge it as one of 통과 (pass), 미통과 (fail), 해당 없음 (not applicable), or 미확인 (unverified).
     - For 통과, give the file and location, or the command run and its result.
-4. Run the pre-commit routine of the relevant parts. Leave commands you could not run as 미확인 and give the reason.
+4. Run the check commands of the relevant parts (`AGENTS.md` > `3. Scope and prohibitions`). Leave commands you could not run as 미확인 and give the reason.
 5. For 미통과 items, propose a fix only. Do not change anything.
 
 ### B. Review assist
 
 1. Read `💬 리뷰어에게` in the PR body first, and record the result for each request.
-2. Identify the parts from the changed paths and choose the checklist sections. Always apply "문서·AI 산출물" in the common sections.
+2. Identify the parts from the changed paths. Apply all common sections (A–E) and the sections for the changed parts (`review-checklist.md` > `적용 범위`).
 3. Look from three viewpoints: function (gaps or mismatches against the specification), code (responsibility, exceptions, boundaries), and tests (scenarios).
 4. List separately where the PR body and the code differ.
 5. Write all three of the following for each finding (`CONTRIBUTING.md` > `9. 리뷰`).
@@ -46,7 +46,7 @@ In both modes, people make the decisions.
     - 권장 (recommended — Comment): rules and consistency, readability, performance
     - 질문 (question — Comment): unclear intent or needs confirmation
 7. If there is no 필수 finding, draft an approval comment.
-8. Save the result to `.claude/drafts/PR-<number>-review.md` and give the path. Do not post anything on GitHub.
+8. Save the result to `.claude/drafts/PR-<number>-review.md` and give the path. Do not post anything on GitHub. Write document item numbers as `N번`, not `#N` (`AGENTS.md` > `8. Draft files`).
 
 ## Output format
 
@@ -111,5 +111,5 @@ B (saved to the file):
 | | Claude Code | Web chat |
 | --- | --- | --- |
 | Reading the diff | A uses `git diff`, B uses `gh pr diff <number>` | The user pastes the diff or changed files |
-| Running commands | Runs the pre-commit routine directly | Cannot run them. Those items are 미확인 |
+| Running commands | Runs the check commands directly | Cannot run them. Those items are 미확인 |
 | Result | Saved as a file under `.claude/drafts/` | Output as a Markdown code block |
