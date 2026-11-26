@@ -13,8 +13,8 @@
 | 2 | `develop` 최신화 → 작업 브랜치 생성 (선행 PR이 머지 전이면 Stack, 1.4) | 진행 중 |
 | 3 | 개발 및 커밋 | 진행 중 |
 | 4 | 원격 브랜치 push | 진행 중 |
-| 5 | Draft PR 생성 (base: `develop`, Stack이면 선행 브랜치) | 진행 중 |
-| 6 | 셀프 리뷰 후 Ready for review 전환, 팀 채널에 리뷰 요청 | PR 리뷰 중 |
+| 5 | 셀프 리뷰 후 Draft PR 생성 (base: `develop`, Stack이면 선행 브랜치) | 진행 중 |
+| 6 | Ready for review 전환, 팀 채널에 리뷰 요청 | PR 리뷰 중 |
 | 7 | 리뷰 반영 후 `Merge commit`으로 머지 | PR 리뷰 중 |
 | 8 | 병합된 브랜치 삭제, Jira 이슈 상태 변경 (QA가 필요하면 QA 대기) | 완료 / QA 대기 |
 | 9 | 팀원 전원 `git pull origin develop` | — |
@@ -103,7 +103,7 @@ scope 판단 기준 (위에서부터 처음 맞는 것):
 
 1. 한 PR이 두 scope를 건드리면 PR을 쪼갤 수 있는지 먼저 검토합니다.
 2. 쪼갤 수 없으면 변경의 주된 목적이 속한 scope 하나만 씁니다.
-3. 여러 파트가 함께 승인해야 하는 계약 파일(`docs/dev/specs/interfaces.md` 등)도 위치 기준으로 scope를 정합니다. 승인은 `CODEOWNERS`가 강제합니다.
+3. 여러 파트가 함께 승인해야 하는 계약 파일(`docs/dev/specs/interfaces.md` 등)도 위치 기준으로 scope를 정합니다. `.github/CODEOWNERS`에 적힌 파트 모두에게 리뷰를 받습니다. GitHub은 그중 한 명의 승인만 있어도 통과시키므로, 나머지 파트 확인은 PR에서 직접 요청합니다.
 
 ### 1.4 Stack 브랜치
 
@@ -119,7 +119,7 @@ git push -u origin <새-브랜치>
 
 - PR의 base는 `develop`이 아니라 **선행 브랜치**로 지정합니다.
     - base를 `develop`으로 두면 선행 PR의 변경까지 diff에 섞입니다.
-- Stack의 두 번째 이상 PR에는 `🧱 stack` 라벨을 **반드시** 붙입니다 (4.6 라벨).
+- Stack의 두 번째 이상 PR에는 `🧱 stack` 라벨을 **반드시** 붙입니다 (4.6 PR 본문 작성).
 - PR "리뷰어에게"에 선행 PR 번호와, 선행 PR 머지 후 base를 바꾼다는 점을 적습니다.
 
 **선행 브랜치가 바뀌었을 때**
@@ -138,6 +138,7 @@ git push                               # rebase했다면 git push --force-with-l
 - GitHub에서 PR의 base를 `develop`으로 바꿉니다. 머지 후 선행 브랜치를 삭제하면 자동으로 바뀝니다.
 - Files changed에 내 변경만 남았는지 확인합니다.
 - PR이 `develop`보다 뒤처졌다고 나오면 `develop`을 merge해서 올립니다.
+- base를 바꾸는 것만으로는 CI가 다시 돌지 않습니다. 머지 전에 `ci-result` ✅가 있는지 확인하고, 없으면 다음 push 때 생깁니다.
 
 ```bash
 git fetch origin
@@ -257,7 +258,7 @@ git stash pop        # 보관한 변경 복원
 | 커밋 전 수정 내용 버리기 | `git restore <파일>` | 버린 내용은 복구하기 어려움. diff 먼저 확인 |
 | push 전 마지막 커밋 메시지 수정 | `git commit --amend -m "<type>(<scope>): <subject> (KAN-번호)"` | push한 커밋에는 쓰지 않음 |
 | push 전 마지막 커밋 취소 (변경은 유지) | `git reset --soft HEAD~1` | push한 커밋에는 쓰지 않음 |
-| 이미 push·머지된 커밋 되돌리기 | `git revert <커밋>` | 히스토리를 지우지 않고 되돌리는 커밋을 새로 만듦 |
+| 이미 push·머지된 커밋 되돌리기 | `git revert <커밋>` (머지된 PR 전체는 `git revert -m 1 <머지 커밋>`) | 히스토리를 지우지 않고 되돌리는 커밋을 새로 만듦. `develop`은 새 브랜치에서 revert한 뒤 PR로 올림 |
 | 실수로 `develop`에서 작업함 (커밋 전) | `git switch -c <새-브랜치>` | 커밋 전 변경은 새 브랜치로 따라옴 |
 
 - 이미 push한 커밋은 팀원에게 영향을 줄 수 있으므로 임의로 amend하거나 강제 push하지 않습니다. 수정은 새 커밋으로 올립니다.
@@ -300,8 +301,8 @@ Stack 후속 → 선행 브랜치 ✅ (선행 PR 머지 후 develop으로 변경
 
 ### 4.3 PR 절차
 
-1. Draft PR 생성 (base: `develop`, Stack PR은 선행 브랜치 · PR 템플릿 작성 · Stack이면 `🧱 stack` 라벨)
-2. 셀프 리뷰 (`docs/dev/ai/review-checklist.md`) 후 `Ready for review` 전환, 팀 채널에 리뷰 요청 💬
+1. 셀프 리뷰 (`docs/dev/ai/review-checklist.md`) — 미통과가 없어야 PR을 만듭니다
+2. Draft PR 생성 (base: `develop`, Stack PR은 선행 브랜치 · PR 템플릿 작성 · Stack이면 `🧱 stack` 라벨) 후 `Ready for review` 전환, 팀 채널에 리뷰 요청 💬
 3. 리뷰 반영 후 `Merge commit`으로 머지
 4. 병합된 브랜치 삭제
 5. Jira 이슈 상태 변경 (`완료`, QA가 필요하면 `QA 대기`)
@@ -317,9 +318,10 @@ Stack 후속 → 선행 브랜치 ✅ (선행 PR 머지 후 develop으로 변경
 | `hotfix/*` → `main` | Merge commit |
 | `main` → `develop` (역병합) | Merge commit |
 
-- `develop`은 저장소 설정상 Merge commit만 허용합니다 (`docs/ops/deploy.md` > `1. CI — 빌드·테스트`).
-- 머지 조건은 `README.md` > CI > 머지 규칙을 따릅니다 (`ci-result` 체크 통과).
+- `develop`은 저장소 설정상 Merge commit만 허용합니다.
+- 머지 조건: `ci-result` 체크 통과 + 승인 2명 이상 (`docs/ops/deploy.md` > `1. CI — 빌드·테스트 (사용 중)`).
 - PR 생성·Ready 전환·머지와 CI 결과는 Discord로 알림이 갑니다 (`.github/workflows/discord-notification.yml`). PR 본문에 CI 결과를 따로 적지 않습니다.
+    - base가 `develop`·`main`이 아닌 Stack PR은 CI·알림 대상이 아닙니다.
 
 ### 4.5 PR 전 체크리스트
 
@@ -340,6 +342,7 @@ Stack 후속 → 선행 브랜치 ✅ (선행 PR 머지 후 develop으로 변경
     - `@계정` 멘션은 Draft라도 PR을 만드는 순간 알림이 갑니다. 알림을 보낼 때가 아니면 파트명으로 적습니다.
 - 리뷰 피드백을 반영한 커밋이 있으면 구현 내용에 `**피드백:** 반영한 내용`으로 추가합니다.
 - 글머리 한 항목이 한 문장을 넘길 것 같으면 하위 글머리로 내립니다.
+- 문서 항목 번호는 `#N`이 아니라 `N번`으로 적습니다 (예: `미결정 9번`). GitHub이 `#N`을 이슈·PR 링크로 바꿉니다. 리뷰 코멘트·답글도 같습니다.
 - 라벨은 선택입니다. 단, Stack의 두 번째 이상 PR에는 `🧱 stack` 라벨이 필수입니다.
 
 ---
@@ -437,16 +440,6 @@ git config --global user.email "your@email.com"
 
 - 상태와 각 상태로 옮기는 시점은 `docs/dev/ai/jira-guide.md` > `8. 상태 흐름`을 따릅니다.
 
---- | --- |
-| 백로그 | 이슈는 만들었지만 이번 스프린트에서 하지 않음 |
-| 해야 할 일 | 본문 작성·담당자 지정 완료, 이번 스프린트에서 함 |
-| 진행 중 | 작업 브랜치 생성 |
-| PR 리뷰 중 | PR을 Ready for review로 전환 |
-| QA 대기 | 머지 후 QA가 필요한 작업 |
-| QA 중 | QA 진행 |
-| QA 완료 | QA 통과 |
-| 완료 | 완료 조건 전부 충족 (QA가 필요 없으면 머지 후 바로) |
-
 ---
 
 ## 9. 리뷰
@@ -468,6 +461,7 @@ git config --global user.email "your@email.com"
 - **대안:** 바꿀 코드나 방법
     - 몇 줄 수정이면 GitHub `suggestion` 블록으로 적습니다.
     - 하나로 정할 수 없으면 선택지를 나열합니다.
+- 문서 항목 번호는 `N번`으로 적습니다 (4.6).
 
 ### 9.3 제출 방식
 
@@ -500,9 +494,9 @@ Claude Code 등 AI 협업 도구를 쓸 때의 규칙과 사용법은 아래에 
 
 AI 도구를 써도 바뀌지 않는 것:
 
-- **push, Jira 이슈 등록, PR 등록·머지, 코멘트·리뷰 등록은 사람이 승인하거나 직접 합니다.** AI는 초안을 먼저 보여 줍니다.
+- **push, Jira 이슈 등록·수정, PR 등록·머지, 답글 등록은 사람이 승인하거나 직접 합니다.** AI는 초안을 먼저 보여 줍니다.
     - 대화로 승인하는 것과 Claude Code 승인 창이 함께 뜨는 것의 구분은 `AGENTS.md` > `0. Absolute rules` > `Approval` 표를 따릅니다.
-- 리뷰 코멘트·승인·변경 요청은 사람이 직접 등록합니다.
+- 리뷰·승인·변경 요청은 AI가 등록하지 않습니다. 사람이 직접 등록합니다.
 - 이슈·PR 본문 초안은 `.claude/drafts/`에 마크다운 파일로 만들 수 있습니다.
     - `.claude/` 아래는 `.gitignore`로 커밋되지 않습니다 (`.claude/settings.json`만 예외).
     - 파일을 열어 직접 고친 뒤 등록합니다.
