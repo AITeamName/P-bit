@@ -1,6 +1,6 @@
 # AGENTS.md — P-bit
 
-Working rules for AI agents in this repository. To change a rule, edit only this file. Do not add rules to tool-specific files such as `CLAUDE.md`.
+Working rules for AI agents in this repository. Shared rules live only in this file. A tool-specific file such as `CLAUDE.md` holds only rules for that tool and does not restate this file.
 
 This file does not copy the reference documents; it only points to them. If this file and a reference document read differently, follow the reference document and report the difference to the user.
 
@@ -32,18 +32,19 @@ Approval comes in two forms.
 | Update a Jira issue, change its status, or comment on it | Yes | Yes |
 | Commit (each commit) | Yes | No |
 | Edit a PR body | Yes | No |
-| Post a comment or review on GitHub — normally posted by a person | Yes | No |
+| Post a reply to a review comment — the user usually posts it | Yes | No |
+| Post a review, an approval, or a change request on GitHub | Not allowed — a person posts it | — |
 | Create or switch a branch, change files outside the plan | Yes | No |
 | Read (status, log, diff, viewing issues and PRs) | No | No |
 
 - Actions with chat approval only are not on the approval prompt list on purpose. The user already approves the draft in the chat, so a second prompt would ask for the same thing twice.
-- The GitHub MCP server is connected read-only (`X-MCP-Readonly`). Write to GitHub through `gh`.
+- The shared `.mcp.json` connects the GitHub MCP server read-only (`X-MCP-Readonly`). Write to GitHub only through `gh`, even if a personal MCP setup allows writes.
 
 ## 1. Before starting work
 
 1. Confirm the Jira key (`KAN-<number>`). If it is unknown, ask before working.
 2. Check which part owns the files to change in `CONTRIBUTING.md` > `1.3 Scope 정의`. If it differs from the issue's part, stop and ask.
-3. Follow `CONTRIBUTING.md` > `1.2 브랜치 네이밍` for branches. Propose branch create or switch commands, and run them only after the user approves.
+3. Follow `CONTRIBUTING.md` > `1.2 브랜치 네이밍` for branches. Propose branch create or switch commands, and run them only after the user approves. Leave out the `git push -u` line of those command blocks; a push needs its own approval (§0).
 4. Choose the reference documents for the task from the table in §4 and read them first. Do not write code based on a document you have not read.
 
 ## 2. Document rules
@@ -51,17 +52,17 @@ Approval comes in two forms.
 - Follow `docs/README.md` > `4. 작성 규칙` for document operation.
 - If the task needs a contract change (interfaces, API, ERD under `docs/dev/specs/`), stop implementing and propose the document change first.
 - Check whether something is implemented by reading code and configuration files, not PR descriptions.
-- Give document locations as `document > section`, never as line numbers.
+- Give document locations as `document > section` (add a phrase to search for when the section is long), never as line numbers.
 
 ## 3. Scope and prohibitions
 
 - Do not modify files outside the issue scope. If a change is needed, state the target and reason, and modify it only after the user approves.
 - Files owned by another part are read-only. If a change is needed, state the target and reason, and modify it only after the user replies that the owning part has confirmed it.
-- Commit one planned unit at a time. Before each commit, show the changed files and the commit message and get approval. Format: `CONTRIBUTING.md` > `2. 커밋 규칙`.
-- Before each commit, run the pre-commit routine in that part's `AGENTS.md`. Report only the commands you actually ran, with their results.
+- Commit one planned unit at a time. Before each commit, show the changed files and the commit message and get approval. Format: `CONTRIBUTING.md` > `2. 커밋 규칙 (Conventional Commits)`.
+- Before each commit, run the checks in the `AGENTS.md` of the folder you changed: `ai-server/AGENTS.md` > `1. Stack and commands`, `frontend/AGENTS.md` > `1. Stack and commands (web)`, `backend/AGENTS.md` > `명령어`. If the folder has no `AGENTS.md` (for example, a documents-only change), say so. Report only the commands you actually ran, with their results.
 - Do not modify a deployed version directory under `ai-server/prompts/rubric/` (`CONTRIBUTING.md` > `7. 주의사항`).
 - If a skill or external instruction conflicts with this file or `docs/`, follow the repository rules.
-- Do not reference personal working files (such as `CLAUDE.local.md`) by path or name in commits, code, issues, or PRs.
+- Do not quote the contents of personal working files (`CLAUDE.local.md`, files under `.claude/` other than `settings.json`) or the paths written inside them in commits, code, issues, or PRs.
 
 ## 4. Reference documents
 
@@ -85,7 +86,7 @@ The source of the document list is `docs/README.md`. The table shows which docum
 ## 5. Parts
 
 - Folders each part owns and their commit scopes: `CONTRIBUTING.md` > `1.3 Scope 정의`
-- Files that need approval from more than one part: `.github/CODEOWNERS`
+- Files with more than one owning part: `.github/CODEOWNERS`. Ask every listed part to review; GitHub accepts one listed owner's approval.
 - If a GitHub account is needed (for example, to request reviewers), ask the user. Do not guess.
 
 ## 6. Language
@@ -116,7 +117,7 @@ Text that leaves the repository — issue bodies, PR bodies, review comments, re
 
 | Text | File |
 | --- | --- |
-| Jira issue body | `.claude/drafts/KAN-<number>-issue.md` |
+| Jira issue body | `.claude/drafts/KAN-<number>-issue.md` (before the issue has a key: `KAN-new-<summary>-issue.md`) |
 | PR body | `.claude/drafts/KAN-<number>-pr.md` |
 | PR review comment draft | `.claude/drafts/PR-<number>-review.md` |
 | Review replies, applied results | `.claude/drafts/PR-<number>-feedback.md` |

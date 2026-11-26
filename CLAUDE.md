@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Entry point for Claude Code. The working rules are in `AGENTS.md`, loaded by the line below. Add rules only to `AGENTS.md`.
+Entry point for Claude Code. The shared rules are in `AGENTS.md`, loaded by the line below. This file holds only Claude Code-specific rules.
 
 @AGENTS.md
 
@@ -10,6 +10,6 @@ Entry point for Claude Code. The working rules are in `AGENTS.md`, loaded by the
     - If a connection is not available, ask the user to paste the issue or PR content and continue.
     - Setup: `docs/dev/ai/README.md` > `5. MCP·CLI 연결 (Claude Code)`.
 - Actions marked for an approval prompt in `AGENTS.md` > `0. Absolute rules` > `Approval` are set to `ask` in `.claude/settings.json`. Even when the approval prompt appears, get chat approval first.
-- Save the draft files in `AGENTS.md` §8 as files. Register a PR with `gh pr create --body-file <draft file>`.
+- Save the draft files in `AGENTS.md` §8 as files. Register a PR as a Draft with `gh pr create --draft --body-file <draft file>` (`docs/dev/ai/prompts/50-pr-write.md` > `Steps`).
 - Do not run commands that include secret values. Give the command for the user to run in a separate terminal.
 - Personal instructions go in each user's `CLAUDE.local.md` (not committed).
