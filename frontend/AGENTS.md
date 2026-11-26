@@ -65,8 +65,7 @@ frontend/web/src
 - Values starting with `VITE_` are exposed to the browser. Never put secrets in them.
 - Do not call APIs or fields that are not in the specification by assumption.
 - The items below are undecided. Do not implement them on your own; ask the user first.
-    - Error codes that separate token expiry from auth failure, and logout when the access token has expired
-    - Web and API domain layout in deployment (refresh cookie `SameSite`)
+    - Production domain name
     - Whether terms content includes HTML
     - Design token values for Purple 500/600, semantic tokens
 
