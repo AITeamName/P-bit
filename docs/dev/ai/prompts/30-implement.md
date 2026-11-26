@@ -11,7 +11,7 @@ Implement the settled scope one commit unit at a time. Get the user's approval f
 ## Inputs
 
 - The decisions and commit units from `10-plan`
-- The `AGENTS.md` of the folder that holds the files to change (stack, structure, rules, pre-commit routine)
+- The `AGENTS.md` of the folder that holds the files to change (stack, structure, rules, check commands)
 - Reference documents (chosen in `00-session-start`)
 - Similar existing code — before creating a new pattern, look for an existing implementation in the same folder.
 
@@ -19,8 +19,9 @@ Implement the settled scope one commit unit at a time. Get the user's approval f
 
 ### A. Before starting
 
-1. For Stack work, confirm you are on top of the preceding branch. If the branch does not exist, propose the command to create it and run it after approval.
-    - `git switch -c <new-branch> <preceding-branch>`
+1. Confirm the work branch. If it does not exist, propose the commands and run them after approval. Leave out `git push -u`; a push needs its own approval.
+    - Normal: `git switch develop` → `git pull origin develop` → `git switch -c <branch>` (`CONTRIBUTING.md` > `3.1 작업 시작 전 최신화`)
+    - Stack: `git fetch origin` → `git switch -c <branch> origin/<preceding-branch>` (`CONTRIBUTING.md` > `1.4 Stack 브랜치`)
 2. If the commit units and the actual code do not fit, report it before starting.
 
 ### B. Each commit
@@ -28,7 +29,7 @@ Implement the settled scope one commit unit at a time. Get the user's approval f
 1. Write or change only the files planned for this commit. If another file is needed, say so and wait for approval.
 2. If a judgment the documents do not settle comes up (a structural choice, a value or error handling not in the specification), do not decide it; report it as an options table.
 3. If implementation is impossible without changing a contract (`docs/dev/specs/`), stop and propose the document change.
-4. Run the pre-commit routine in the folder's `AGENTS.md` and show the results. If it fails, do not commit.
+4. Run the check commands in the folder's `AGENTS.md` (`AGENTS.md` > `3. Scope and prohibitions`) and show the results. If they fail, do not commit. If the folder has none, say so.
 5. Give the commit report: changed files, design judgments, check results, `git diff --stat`, commit message.
 6. Commit when the user says "커밋해". Give the push command. Run it only if the user asks you to push (`AGENTS.md` > `0. Absolute rules`).
 7. If something fails or you get stuck, organize the cause with `60-feedback` part C (CI failure, conflict, error).
@@ -74,12 +75,12 @@ For each commit:
 
 ## Part blocks
 
-When making the request, add the block for your part to get the context quickly. The source of the rules is each folder's `AGENTS.md`.
+Read the documents for the part you change. The rules live in these documents, not here.
 
-- **Backend** — Follow `backend/AGENTS.md`. AI server calls and notation conversion happen in one place, `infra/ai` (`docs/dev/specs/interfaces.md` > `7`). Change the schema only with a new Flyway version file.
-- **Frontend** — Follow `frontend/AGENTS.md`. The frontend does not call the AI server directly; it uses only the Spring API (`/api/v1`). Send `Idempotency-Key` on requests that go through AI (`interfaces.md` > `5`).
-- **LLM** — Follow `ai-server/AGENTS.md`. Keep rubrics, thresholds, and sentence templates in `ai-server/prompts/rubric/{version}/`; do not hardcode them. Take model, timeout, and retry values from environment variables.
-- **Infrastructure** — Reference secrets only through GitHub Secrets. Keep the structure of `.github/workflows/ci.yml` that runs only the changed parts (`docs/ops/deploy.md`).
+- **Backend** — `backend/AGENTS.md`, `docs/dev/specs/interfaces.md` > `7`
+- **Frontend** — `frontend/AGENTS.md`, `docs/dev/specs/api.md`, `interfaces.md` > `5`
+- **LLM** — `ai-server/AGENTS.md`, `docs/dev/llm/model-design.md`
+- **Infrastructure** — `docs/ops/deploy.md`, `docs/ops/env.md`
 
 ## Tool differences
 

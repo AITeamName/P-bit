@@ -32,8 +32,8 @@ Compare the reference documents with the issue to find undecided decisions first
 ### Step 3 — Commit units
 
 1. Split commits in dependency order. Each commit must not break the build or tests on its own.
-2. Put tests in the same commit as the code they test.
-3. One scope per commit. Message format: `CONTRIBUTING.md` > `2. 커밋 규칙`.
+2. One purpose per commit: split feature, test, and refactoring commits (`CONTRIBUTING.md` > `2. 커밋 규칙 (Conventional Commits)` > `작성 기준`).
+3. One scope per commit. Message format: `CONTRIBUTING.md` > `2. 커밋 규칙 (Conventional Commits)`.
 
 ### When to stop
 

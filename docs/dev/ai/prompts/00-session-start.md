@@ -27,11 +27,12 @@ Report results only. Do not change code or documents in this stage.
 3. **Check linked PRs and Stack**
     - Check whether an open PR with the same KAN key exists.
     - If the current branch was cut from another work branch instead of `develop`, check whether that preceding PR is merged.
+    - If it is merged, report that this PR's base must change to `develop` and that `origin/develop` must be merged if the branch is behind (`CONTRIBUTING.md` > `1.4 Stack 브랜치`). Do not run it.
 4. **Choose reference documents**
     - Choose the documents to read for this work from `AGENTS.md` > `4. Reference documents` and the document list in `docs/README.md`.
     - Include the `AGENTS.md` of the folder that holds the files to change.
 5. **Mark gaps**
-    - If the description is empty or has no done criteria, mark it and recommend `20-issue-write`.
+    - If the description is empty or has no done criteria, mark it and recommend `20-issue-write` after `10-plan`.
     - List scope items with no grounds in the documents as questions.
 
 ## Output format
@@ -50,7 +51,7 @@ Report results only. Do not change code or documents in this stage.
 ### 확인이 필요한 항목
 1.
 
-다음: 10-plan (설명란이 비었으면 20-issue-write 먼저)
+다음: 10-plan (설명란이 비었으면 10-plan 결과로 20-issue-write를 거쳐 30-implement)
 ```
 
 ## Do not
