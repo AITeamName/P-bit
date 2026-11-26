@@ -35,7 +35,9 @@ public class SecurityConfig {
 						.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/actuator/health", "/error").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/v1/terms", "/api/v1/terms/*").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/v1/auth/check-email", "/api/v1/auth/check-nickname").permitAll()
-						.requestMatchers(HttpMethod.POST, "/api/v1/auth/signup", "/api/v1/auth/login").permitAll()
+						// refresh·logout은 Access Token이 만료된 상태에서도 부르므로 인증 없이 연다. 대상은 refresh 쿠키로 판단한다
+						.requestMatchers(HttpMethod.POST, "/api/v1/auth/signup", "/api/v1/auth/login",
+								"/api/v1/auth/refresh", "/api/v1/auth/logout").permitAll()
 						.anyRequest().authenticated())
 				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling(exception -> exception
