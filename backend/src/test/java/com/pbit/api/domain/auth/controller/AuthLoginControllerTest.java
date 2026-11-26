@@ -27,7 +27,9 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.pbit.api.domain.auth.service.LoginResult;
 import com.pbit.api.domain.auth.service.LoginService;
+import com.pbit.api.domain.auth.service.RefreshTokenService;
 import com.pbit.api.domain.auth.service.SignupService;
+import com.pbit.api.domain.auth.service.TokenRefreshService;
 import com.pbit.api.global.config.CorsConfig;
 import com.pbit.api.global.config.SecurityConfig;
 import com.pbit.api.global.error.BusinessException;
@@ -52,9 +54,16 @@ class AuthLoginControllerTest {
 	@MockitoBean
 	private LoginService loginService;
 
+	@MockitoBean
+	private RefreshTokenService refreshTokenService;
+
 	// AuthController 생성에 필요. 이 테스트에서는 쓰지 않는다
 	@MockitoBean
 	private SignupService signupService;
+
+	// AuthController 생성에 필요. 이 테스트에서는 쓰지 않는다
+	@MockitoBean
+	private TokenRefreshService tokenRefreshService;
 
 	@Test
 	void 로그인_성공시_200과_토큰_본문_refresh_쿠키를_응답한다() throws Exception {
