@@ -7,7 +7,8 @@ PR 제목 형식: [KAN-번호] type(scope): 작업 내용 요약
 Merge commit으로 머지하면 이 제목이 develop 머지 커밋 메시지가 된다.
 
 변환 규칙:
-- Jira 파트 태그([BE] / [LLM] / [FE] / [EXT] / [DE] / [INFRA])는 제거하고 scope로 대체한다.
+- Jira 파트 태그([BE] / [LLM] / [FE] / [EXT] / [DE] / [INFRA] / [DOC])는 제거하고 scope로 대체한다.
+  [DOC]는 바꾸는 문서 위치의 scope를 쓴다 (CONTRIBUTING.md 1.3 Scope 정의). [MTG] 이슈는 PR을 만들지 않는다.
 - [KAN-번호]와 type(scope):를 앞에 붙인다.
 - 설명 문구는 Jira 제목에서 그대로 가져와도 된다.
 
@@ -73,10 +74,10 @@ P-bit 맥락 예시:
 테스트 미진행이면 "테스트 미진행"을 체크하고 사유를 적는다.
 
 파트별 테스트 실행:
-- BE:  ./gradlew test
-- LLM: uv run pytest -q
-- FE:  수동 확인 또는 npm run test
-- 로컬 실행: CONTRIBUTING.md §3 참고
+- BE:  ./gradlew test (backend/에서)
+- LLM: uv run --directory ai-server pytest -q (저장소 루트에서)
+- FE:  테스트 도구 없음 — 브라우저 수동 확인 (frontend/AGENTS.md 4. Tests)
+- 로컬 실행: README.md "로컬 실행"
 -->
 
 - [ ] 단위 테스트
@@ -157,11 +158,11 @@ LLM↔BE 인터페이스 변경이 포함된 경우 반드시 명시한다.
 직접 확인한 항목만 체크한다. 해당 없는 항목은 끝에 (해당 없음)을 붙인다.
 
 [로컬 빌드 및 테스트 통과] 파트별 실행 명령:
-- BE  빌드: ./gradlew build  /  테스트: ./gradlew test
-- LLM 린트: uv run ruff check . && uv run ruff format --check .
-- LLM 타입: uv run mypy src
-- LLM 테스트: uv run pytest -q
-- FE  린트·빌드: npm run lint && npm run build
+- BE  빌드: ./gradlew build  /  테스트: ./gradlew test (backend/에서)
+- LLM 린트: uv run --directory ai-server ruff check . && uv run --directory ai-server ruff format --check .
+- LLM 타입: uv run --directory ai-server mypy src
+- LLM 테스트: uv run --directory ai-server pytest -q
+- FE  린트·빌드: npm run lint && npm run build (frontend/web/에서)
 
 [내 담당 폴더 외 파일 변경 없음]
 - 변경이 있으면 "리뷰어에게" 섹션에 사유를 기재한다.
