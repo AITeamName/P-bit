@@ -20,7 +20,7 @@ uv run --directory ai-server mypy src
 uv run --directory ai-server pytest -q
 ```
 
-- `ai-server/src/` is still empty. When adding the first code, also add the tool config above (`pyproject.toml`).
+- `ai-server/src/` is still empty and there is no `pyproject.toml`, so this routine cannot run yet. Until then, report it as not run, with this reason. The commit that adds the first code also adds `pyproject.toml` with the ruff, mypy, and pytest config.
 
 ## 2. Structure
 
@@ -38,7 +38,7 @@ ai-server/
 
 ### Boundaries (`docs/dev/specs/interfaces.md` > 1.2)
 
-- Never connect to the DB. Keep no state; judge within one request only.
+- Never connect to the DB. Judge each request on its own input; keep no state across requests. The only allowed state is the 60-second `Idempotency-Key` response cache (`interfaces.md` > 3.11, 5.2).
 - Use `channel` (sidebar or web) for logging only, never to branch judgment.
 - Never write `prompt_text` to logs or error responses.
 
@@ -60,6 +60,7 @@ ai-server/
 - One LLM call per prompt for element judgment. Do not split calls per element.
 - If `evidence` is not found verbatim in the original text, drop that span and add `SPAN_MISMATCH` to `warnings`.
 - If `present: true` has no span, the code sets it back to `false`.
+    - When every span of an element is dropped by the rule above, which rule wins is undecided (`model-design.md` > 3.2 keeps `present`, 3.3 sets it to `false`). Ask the user before implementing it.
 - `clarity` is decided by the ambiguity detector (code), not the LLM (`model-design.md` > 6장).
 - On judgment failure (`degraded: true`), `elements` · fulfillment rate · `level` are `null`. Never make up a level.
 
@@ -77,7 +78,7 @@ ai-server/
 
 - Read models, timeouts, and retries from environment variables (`LLM_MODEL_JUDGE`, `LLM_MODEL_ANSWER`, `LLM_TIMEOUT_*`, `LLM_MAX_RETRY`, `RUBRIC_VERSION`).
 - Internal call auth: `X-Internal-Token` = `AI_INTERNAL_TOKEN`. Mismatch returns 401.
-- Add new keys to both `ai-server/.env.example` and `docs/ops/env.md` 2절.
+- To add a key, follow `docs/ops/env.md` > 8. 새 환경변수를 추가할 때.
 
 ## 4. Tests
 
@@ -88,7 +89,6 @@ ai-server/
 ## 5. Prohibitions
 
 - Do not commit `.env` or API keys.
-- Do not edit a deployed `prompts/rubric/vN/`.
 - Do not create endpoints, fields, or error codes that are not in `interfaces.md`. If needed, update the document first.
 
 ## 6. Reference documents
