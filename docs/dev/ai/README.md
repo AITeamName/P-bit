@@ -69,7 +69,7 @@ AI 도구(Claude Code, Codex, claude.ai 웹 채팅)로 이 저장소 작업을 �
 ```
 
 - 각 단계는 결과를 낸 뒤 사람의 승인을 기다린다. AI가 다음 단계로 스스로 넘어가지 않는다.
-- push, Jira 이슈 등록·수정, PR 등록, 답글 등록은 사람이 승인하거나 직접 한다. 리뷰·승인·변경 요청과 PR 머지는 사람이 직접 한다. 기준은 `AGENTS.md` > `0. Absolute rules` > `Approval` 표.
+- push, Jira 이슈 등록·수정, PR 등록·머지, 답글 등록은 사람이 승인하거나 직접 한다. PR 머지는 보통 사람이 직접 한다. 리뷰·승인·변경 요청은 AI가 등록하지 않는다. 기준은 `AGENTS.md` > `0. Absolute rules` > `Approval` 표.
 
 ### 3.2 프롬프트별 요청 방법
 
