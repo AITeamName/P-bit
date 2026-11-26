@@ -4,7 +4,7 @@
 이 템플릿은 모든 PR에 공통으로 사용된다. 아래 규칙을 지켜 작성한다.
 
 PR 제목 형식: [KAN-번호] type(scope): 작업 내용 요약
-Squash and merge 시 이 제목이 develop 커밋 메시지가 된다.
+Merge commit으로 머지하면 이 제목이 develop 머지 커밋 메시지가 된다.
 
 변환 규칙:
 - Jira 파트 태그([BE] / [LLM] / [FE] / [EXT] / [DE] / [INFRA])는 제거하고 scope로 대체한다.
