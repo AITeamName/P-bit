@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-> **최종 수정일:** 2026-11-22
+> **최종 수정일:** 2026-11-26
 > **기준 브랜치:** `develop` (기본 브랜치), `main` (배포/릴리즈)
 
 ---
@@ -15,7 +15,7 @@
 | 4 | 원격 브랜치 push | 진행 중 |
 | 5 | Draft PR 생성 (base: `develop`, Stack이면 선행 브랜치) | 진행 중 |
 | 6 | 셀프 리뷰 후 Ready for review 전환, 팀 채널에 리뷰 요청 | PR 리뷰 중 |
-| 7 | 리뷰 반영 후 `Squash and merge` | PR 리뷰 중 |
+| 7 | 리뷰 반영 후 `Merge commit`으로 머지 | PR 리뷰 중 |
 | 8 | 병합된 브랜치 삭제, Jira 이슈 상태 변경 (QA가 필요하면 QA 대기) | 완료 / QA 대기 |
 | 9 | 팀원 전원 `git pull origin develop` | — |
 
@@ -30,7 +30,7 @@
 | 브랜치 | 용도 | 규칙 |
 | --- | --- | --- |
 | `main` | 배포/릴리즈 | `develop`·`hotfix/*`에서만 PR, Merge commit, 태그 부여 |
-| `develop` | 개발 통합 브랜치 (기본 브랜치) | 작업 브랜치에서 PR, Squash and merge |
+| `develop` | 개발 통합 브랜치 (기본 브랜치) | 작업 브랜치에서 PR, Merge commit |
 | `feat/*` | 신규 기능 | 서비스 기능, API, 화면, LLM 로직 구현 |
 | `fix/*` | 버그 수정 | 재현 조건이 Jira 이슈에 있어야 함 |
 | `refactor/*` | 구조 개선 | 동작 변경 금지 |
@@ -133,18 +133,18 @@ git push                               # rebase했다면 git push --force-with-l
 
 **선행 PR이 `develop`에 머지됐을 때**
 
-선행 PR은 Squash and merge로 커밋 하나가 됩니다. 그래서 현재 브랜치에 남은 선행 커밋을 떼어 내고 `develop` 위로 옮깁니다.
+선행 PR은 Merge commit으로 머지되어 선행 커밋이 `develop`에 그대로 들어갑니다. 현재 브랜치를 옮기거나 다시 쓸 필요가 없습니다.
+
+- GitHub에서 PR의 base를 `develop`으로 바꿉니다. 머지 후 선행 브랜치를 삭제하면 자동으로 바뀝니다.
+- Files changed에 내 변경만 남았는지 확인합니다.
+- PR이 `develop`보다 뒤처졌다고 나오면 `develop`을 merge해서 올립니다.
 
 ```bash
 git fetch origin
 git switch <현재-브랜치>
-git rebase --onto origin/develop <선행-브랜치> <현재-브랜치>
-git push --force-with-lease
+git merge origin/develop
+git push
 ```
-
-- 그다음 GitHub에서 PR의 base를 `develop`으로 바꾸고, Files changed에 내 변경만 남았는지 확인합니다.
-- `--force-with-lease`는 내 브랜치에만 씁니다. 다른 사람이 같이 쓰는 브랜치에는 쓰지 않습니다.
-- 히스토리를 고치기 전에 `git branch backup/<현재-브랜치>`로 백업해 두면 되돌리기 쉽습니다.
 
 ---
 
@@ -261,7 +261,7 @@ git stash pop        # 보관한 변경 복원
 | 실수로 `develop`에서 작업함 (커밋 전) | `git switch -c <새-브랜치>` | 커밋 전 변경은 새 브랜치로 따라옴 |
 
 - 이미 push한 커밋은 팀원에게 영향을 줄 수 있으므로 임의로 amend하거나 강제 push하지 않습니다. 수정은 새 커밋으로 올립니다.
-- 예외: 내 브랜치에서 Stack을 정리할 때만 `--force-with-lease`를 씁니다 (1.4).
+- 예외: 내 브랜치를 선행 브랜치 위로 rebase했을 때만 `--force-with-lease`를 씁니다 (1.4 "선행 브랜치가 바뀌었을 때").
 - 비밀값(토큰·비밀번호·키)을 커밋했다면 커밋을 지우기 전에 **해당 값을 먼저 폐기·재발급**하고 팀에 알립니다. push된 값은 이미 노출된 것으로 봅니다.
 
 ---
@@ -295,14 +295,14 @@ Stack 후속 → 선행 브랜치 ✅ (선행 PR 머지 후 develop으로 변경
 [KAN-45] perf(llm): 루브릭 v2 적용 — clarity 정확도 개선
 ```
 
-> 💡 `Squash and merge` 시 이 제목이 `develop`의 커밋 메시지가 됩니다.
+> 💡 Merge commit으로 머지하면 이 제목이 `develop`의 머지 커밋 메시지가 됩니다.
 > 
 
 ### 4.3 PR 절차
 
 1. Draft PR 생성 (base: `develop`, Stack PR은 선행 브랜치 · PR 템플릿 작성 · Stack이면 `🧱 stack` 라벨)
 2. 셀프 리뷰 (`docs/dev/ai/review-checklist.md`) 후 `Ready for review` 전환, 팀 채널에 리뷰 요청 💬
-3. 리뷰 반영 후 `Squash and merge`
+3. 리뷰 반영 후 `Merge commit`으로 머지
 4. 병합된 브랜치 삭제
 5. Jira 이슈 상태 변경 (`완료`, QA가 필요하면 `QA 대기`)
 6. 팀원 전원 `git pull origin develop`
@@ -311,12 +311,13 @@ Stack 후속 → 선행 브랜치 ✅ (선행 PR 머지 후 develop으로 변경
 
 | 대상 | 방식 |
 | --- | --- |
-| 작업 브랜치 → `develop` | Squash and merge |
-| Stack 후속 PR | 선행 PR 머지 → base를 `develop`으로 변경 → Squash and merge |
+| 작업 브랜치 → `develop` | Merge commit |
+| Stack 후속 PR | 선행 PR 머지 → base를 `develop`으로 변경 → Merge commit |
 | `develop` → `main` (릴리즈) | Merge commit |
 | `hotfix/*` → `main` | Merge commit |
 | `main` → `develop` (역병합) | Merge commit |
 
+- `develop`은 저장소 설정상 Merge commit만 허용합니다 (`docs/ops/deploy.md` > `1. CI — 빌드·테스트`).
 - 머지 조건은 `README.md` > CI > 머지 규칙을 따릅니다 (`ci-result` 체크 통과).
 - PR 생성·Ready 전환·머지와 CI 결과는 Discord로 알림이 갑니다 (`.github/workflows/discord-notification.yml`). PR 본문에 CI 결과를 따로 적지 않습니다.
 
