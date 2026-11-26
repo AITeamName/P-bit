@@ -14,7 +14,7 @@ AI 프롬프트 작성 능력을 향상시키는 질문력 트레이너 서비�
 | `frontend/web/` | 웹사이트 (로그인 · 온보딩 · 대시보드) | FE |
 | `frontend/extension/` | 크롬 익스텐션 사이드바 | FE |
 | `docs/` | 설계 문서 · API 명세 · ERD | 전원 |
-| `docs/dev/ai` | AI 협업 문서 | LLM |
+| `docs/dev/ai` | AI 협업 문서 | AI 협업 도구 |
 | `docker-compose.yml` | 로컬 DB (PostgreSQL) | BE · INFRA |
 
 > ⚠️ **자기 담당 폴더만 수정합니다.** 다른 파트 폴더 수정이 필요하면 담당자와 먼저 상의하세요.
@@ -71,7 +71,7 @@ git add ai-server/
 # 3. 커밋 (컨벤션 준수)
 git commit -m "feat(llm): 형식 요소 판정 로직 구현 (KAN-18)"
 
-# 4. push → Jira에서 Draft PR 생성
+# 4. push → GitHub에서 Draft PR 생성
 git push origin feat/KAN-18-llm-format-judgement
 ```
 
@@ -126,7 +126,7 @@ hotfix/* → main   ✅ (긴급 수정)
 
 ### 머지 규칙
 - PR 화면 하단의 **`ci-result` 체크가 초록색(✅)이어야 머지**합니다. 빨간색(❌)이면 Actions 탭에서 로그를 확인하고 고친 뒤 다시 push하세요.
-- 파트별 담당자가 1명이라 사람 승인은 필수로 두지 않습니다. 리뷰는 팀 채널 요청 + AI 리뷰 프롬프트로 보완합니다.
+- 머지하려면 `ci-result` ✅와 **승인 2명 이상**이 필요합니다 (`docs/ops/deploy.md` > `1. CI — 빌드·테스트 (사용 중)`). 리뷰는 팀 채널에 요청합니다.
 - 내 파트가 안 바뀐 PR에서는 해당 job이 건너뛰어지며(Skipped), 이는 정상입니다.
 
 ### 참고
