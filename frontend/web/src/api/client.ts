@@ -1,5 +1,5 @@
 // 서버 통신 공통 도구 (모든 화면이 이 도구로 서버에 요청)
-// 공통 헤더, 로그인 토큰, 오류 변환, 토큰 만료 시 재발급 후 재시도
+// 공통 헤더, 로그인 토큰, 오류 변환, 토큰 만료 시 재발급 후 재시도, 쓸 수 없는 토큰이면 로그인 해제
 import { ApiError, NETWORK_ERROR, toApiError } from './errors.ts'
 
 // 도구 생성 설정
@@ -18,9 +18,6 @@ export type RequestOptions = {
   auth?: boolean // false면 로그인 토큰을 붙이지 않음 (로그인 요청 등)
   idempotent?: boolean // true면 중복 처리 방지 번호(Idempotency-Key) 추가
 }
-
-// 이 오류 코드면 토큰 문제: 토큰을 새로 받고 요청을 다시 전송
-const REFRESHABLE_CODES = new Set(['TOKEN_EXPIRED', 'TOKEN_INVALID'])
 
 // { a: 1, b: undefined } -> "?a=1" (undefined 값은 제외)
 function toQuery(query: RequestOptions['query']): string {
@@ -92,37 +89,47 @@ export function createApiClient(options: ClientOptions) {
     return refreshing
   }
 
+  // 로그인이 완전히 풀렸을 때: 토큰 삭제 후 알림
+  function endSession() {
+    accessToken = null
+    options.onAuthFailure?.() // 등록된 함수가 있으면 실행 (로그인 화면으로 이동 등)
+  }
+
   // 요청 전송과 결과 반환 (토큰이 만료됐으면 재발급 후 한 번 재시도)
   // 참고: get/post가 항상 opts를 넘겨서 아래 기본값 {}는 실제로 쓰이지 않음
   async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
     // 중복 처리 방지 번호: 요청당 한 번만 생성, 재시도에도 같은 번호 사용
     const idempotencyKey = opts.idempotent ? crypto.randomUUID() : undefined
-    const sentToken = accessToken // 이 요청에 사용한 토큰 기억
+    let sentToken = accessToken // 이 요청에 사용한 토큰 기억
     let res = await send(path, opts, idempotencyKey)
 
-    // 401(인증 실패)이면서 토큰을 붙인 요청일 때만 재발급 시도
+    // 401(인증 실패)이면서 로그인 토큰을 쓰는 요청이면 오류 코드 확인, 만료일 때만 재발급
     if (res.status === 401 && opts.auth !== false) {
       const failure = await toApiError(res.clone()) // 응답은 한 번만 읽을 수 있어 복사본으로 읽음
-      if (REFRESHABLE_CODES.has(failure.code)) {
+      if (failure.code === 'TOKEN_EXPIRED') {
         // 이 요청이 나간 뒤 다른 요청이 이미 재발급했다면 재발급 생략, 현재 토큰으로 재시도
         // (토큰이 그대로일 때만 직접 재발급)
         if (accessToken === sentToken) {
           try {
             await refreshSession()
           } catch (e) {
-            // 재발급마저 401로 실패: 로그인이 완전히 풀림 (토큰 삭제 후 알림)
-            if (e instanceof ApiError && e.status === 401) {
-              accessToken = null
-              options.onAuthFailure?.() // 등록된 함수가 있으면 실행 (로그인 화면으로 이동 등)
-            }
+            // 재발급마저 401로 실패: 로그인이 완전히 풀림
+            if (e instanceof ApiError && e.status === 401) endSession()
             throw e
           }
         }
+        sentToken = accessToken // 아래 로그인 해제 판단은 재전송에 쓴 토큰 기준
         res = await send(path, opts, idempotencyKey) // 새 토큰으로 같은 요청 재전송
       }
     }
 
-    if (!res.ok) throw await toApiError(res) // 실패 응답은 ApiError로 변환해 던짐
+    if (!res.ok) {
+      const error = await toApiError(res) // 실패 응답은 ApiError로 변환해 던짐
+      // 토큰이 없거나 위조됐거나 회원이 없는 경우: 재발급 없이 로그인 해제
+      // 그사이 토큰이 바뀌었으면 (다시 로그인 등) 지난 토큰에 대한 응답이라 현재 로그인은 유지
+      if (error.code === 'TOKEN_INVALID' && opts.auth !== false && accessToken === sentToken) endSession()
+      throw error
+    }
     if (res.status === 204) return undefined as T // 204: 성공, 돌려줄 내용 없음
     return (await res.json()) as T
   }

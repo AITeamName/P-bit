@@ -10,7 +10,7 @@ let authFailureHandler: (() => void) | null = null
 export const api = createApiClient({
   baseUrl: API_BASE_URL,
   language: locale, // 화면 언어 (요청마다 Accept-Language로 전송)
-  // 토큰 재발급까지 실패하면 호출, 자리에 든 함수를 실행
+  // 로그인이 풀리면 (재발급 실패, 쓸 수 없는 토큰) 호출, 자리에 든 함수를 실행
   // ?.(): 자리가 비어 있으면(null) 아무 일도 하지 않음
   onAuthFailure: () => authFailureHandler?.(),
 })
