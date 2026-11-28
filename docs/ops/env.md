@@ -1,6 +1,6 @@
 # 환경변수 목록 — 서비스별 `.env` 키와 GitHub Secrets
  
-> 담당: 클라우드(INFRA) · 최종 수정: 2026-11-15
+> 담당: 클라우드(INFRA) · 최종 수정: 2026-11-28
 > 출처: 백엔드 기술기획서 v1.1 3.2, LLM 모델 설계서 v1.0, 저장소의 `.env.example` 파일들
  
 ## 0. 비밀값 규칙 (꼭 지킬 것)
@@ -19,10 +19,14 @@
  
 | 키 | 구분 | 필수 | 설명 | local 예시 |
 | --- | --- | --- | --- | --- |
-| `SPRING_PROFILES_ACTIVE` | 📝 | ✅ | `local` · `dev` · `prod` | `local` |
-| `DB_URL` | 📝 | ✅ | JDBC 주소 | `jdbc:postgresql://localhost:5432/pbit` |
-| `DB_USERNAME` | 📝 | ✅ | DB 사용자 | `pbit` |
-| `DB_PASSWORD` | 🔑 | ✅ | DB 비밀번호 | (로컬 전용 값) |
+| `SPRING_PROFILES_ACTIVE` | 📝 | ✅ | `local` · `dev` · `prod` (테스트 환경 Render는 `dev`) | `local` |
+| `DB_URL` | 📝 | ✅ (local만) | JDBC 주소. **`application-local.yml`에서만 읽음** | `jdbc:postgresql://localhost:5432/pbit` |
+| `DB_USERNAME` | 📝 | ✅ (local만) | DB 사용자. local 전용 | `pbit` |
+| `DB_PASSWORD` | 🔑 | ✅ (local만) | DB 비밀번호. local 전용 | (로컬 전용 값) |
+| `SPRING_DATASOURCE_URL` | 📝 | ✅ (local 외) | JDBC 주소. 테스트 환경은 Neon **direct 연결**(pooling off), `jdbc:postgresql://<host>/neondb?sslmode=require` | — |
+| `SPRING_DATASOURCE_USERNAME` | 📝 | ✅ (local 외) | DB 사용자 | — |
+| `SPRING_DATASOURCE_PASSWORD` | 🔑 | ✅ (local 외) | DB 비밀번호 | — |
+| `PORT` | 📝 | ✅ (Render) | Render가 트래픽을 보낼 포트. 앱 기본 포트와 맞춘다 | `8080` |
 | `JWT_SECRET` | 🔑 | ✅ | JWT 서명 키, 32자 이상 | — |
 | `JWT_ACCESS_TTL` | 📝 | | Access 토큰 유효기간 | `PT30M` |
 | `JWT_REFRESH_TTL` | 📝 | | Refresh 토큰 유효기간 | `P14D` |
@@ -33,6 +37,8 @@
 | `AI_TIMEOUT` | 📝 | | FastAPI 호출 타임아웃 | `PT35S` |
 | `WEB_ORIGIN` | 📝 | ✅ | CORS 허용 웹 주소 | `http://localhost:5173` |
 | `EXTENSION_ORIGIN` | 📝 | ✅ (익스텐션 연동) | CORS 허용 익스텐션 주소 | `chrome-extension://{고정 ID}` |
+
+> local 프로필만 `DB_*` 키를 읽는다. 그 외 프로필(테스트 환경·AWS)은 Spring 기본 키 `SPRING_DATASOURCE_*`로 DB에 연결한다.
  
 ## 2. AI 서버 — `ai-server/` (FastAPI)
  
