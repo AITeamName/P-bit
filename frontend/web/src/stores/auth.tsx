@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStatus('anonymous')
   }, [])
 
-  // 재발급까지 실패하면 signOut을 실행하도록 통신 도구에 등록 (로그인이 풀리면 로그인 화면으로 보내는 연결)
+  // 로그인이 풀리면 (재발급 실패, 쓸 수 없는 토큰) signOut을 실행하도록 통신 도구에 등록
   useEffect(() => {
     setAuthFailureHandler(signOut)
     return () => setAuthFailureHandler(null) // 화면에서 사라질 때 등록 해제
