@@ -50,7 +50,6 @@ frontend/web/src
 - Keep the access token in memory only. Do not store it in `localStorage` or similar.
 - The refresh token arrives as an HttpOnly cookie, so requests use `credentials: 'include'`.
 - On a 401 with `error.code` `TOKEN_EXPIRED`, call `POST /auth/refresh` and resend the original request once (`docs/dev/specs/api.md` > 2.4 401 처리). Even if several requests get it at once, send the refresh only once.
-    - The current `src/api/client.ts` also refreshes on `TOKEN_INVALID`, which differs from `api.md` 2.4. Ask the user before changing either.
 - Failure responses are `{ error: { code, userMessage, retryable, requestId, fieldErrors }, fallback }`. Show `userMessage` on screen. If it is missing (`null`: network failure, a response not in the agreed shape), do not make up text; use the i18n default message (`src/api/errors.ts`).
 - The Google login start URL (`/oauth2/authorization/google`) is outside the base URL.
 - The OAuth callback code is single-use. Prevent calling twice with the same code.
